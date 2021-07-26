@@ -6,7 +6,7 @@ const ClearAll = ({canvas}) => {
   }
 
   return (
-      <div className="eraser clear-all" onClick={()=>handleClearAll(canvas)}>
+      <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}>
         Clear all
       </div>
   )

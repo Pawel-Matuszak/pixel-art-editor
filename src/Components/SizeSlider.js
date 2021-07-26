@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 
 const SizeSlider = ({getBrushSize}) => {
   const [brushSize, setBrushSize] = useState(1);
-  const [hover, setHover] = useState(false)
+  // const [hover, setHover] = useState(false)
 
   const handleBrushSize = (e) =>{
     setBrushSize(parseInt(e.target.value));
@@ -11,8 +11,11 @@ const SizeSlider = ({getBrushSize}) => {
 
   return (
     <div className="brush-size-container">
-      {hover && <span className="label">Select brush size</span>}
-      <input type="range" min="1" max="4" step="1" value={brushSize} onMouseOver={()=>setHover(!hover)} onMouseOut={()=>setHover(false)} onChange={handleBrushSize}></input>
+      <div className="icon slider">
+        <input type="range" min="1" max="4" step="1" value={brushSize} onChange={handleBrushSize}></input>
+      </div>
+      <span className="icon-label">Select brush size</span>
+
     </div>
   )
 }

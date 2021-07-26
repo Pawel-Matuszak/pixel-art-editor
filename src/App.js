@@ -4,6 +4,7 @@ import Eraser from './Components/Eraser'
 import ClearAll from './Components/ClearAll'
 import ColorSelect from './Components/ColorSelect'
 import SizeSlider from './Components/SizeSlider'
+import ColorPicker from './Components/ColorPicker'
 
 const App = () => {
   const [canvas, setCanvas] = useState(null)
@@ -11,6 +12,8 @@ const App = () => {
   const [secondColor, setSecondColor] = useState({hex: "#000"});
   const [brushSize, setBrushSize] = useState(1)
   const [eraser, setEraser] = useState(false)
+  const [picker, setPicker] = useState(false)
+
 
   const getCanvasRef = (canvas) =>{
     setCanvas(canvas)
@@ -40,6 +43,7 @@ const App = () => {
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="tools-container">
           <Eraser handleEraser={handleEraser} eraser={eraser}/>
+          <ColorPicker/>
           <ClearAll canvas={canvas}/>
         </div>
         <div className="color-picker-container">
