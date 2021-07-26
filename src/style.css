@@ -1,0 +1,126 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  background: rgba(0, 0, 0, 0.95);
+  color: #707070;
+}
+
+.container{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-column-container{
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 200px;
+}
+
+.tools-container{
+  height: 500px;
+  border: 2px solid #707070;
+}
+
+.color-picker-container{
+  position: relative;
+  height: 120px;
+  width: 150px;
+  margin: 50px auto;
+  border: 2px solid #707070;
+}
+
+.primary-color{
+  position: absolute;
+  top:40%;
+  left:45%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 2px solid #707070;
+  z-index: 100;
+}
+
+.secondary-color{
+  position: absolute;
+  top:60%;
+  left:55%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 2px solid #707070;
+  z-index: 100;
+}
+
+.secondary-color-container{
+  position: relative;
+}
+
+.color-picker{
+  position: absolute;
+  top:0;
+  left:100%;
+  border: 2px solid #707070;
+  z-index: 999;
+}
+
+.color-picker-exit{
+  position: fixed;
+  top:0;
+  left:0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 998;
+}
+
+.right-column-container{
+  height: 80vh;
+  width: 200px;
+  border: 2px solid #707070;
+}
+
+.canvas-container{
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  margin: 0 20px;
+}
+
+.canvas{
+  position: absolute;
+  border: 2px solid #770d0d;
+  display: block;
+}
+
+.background-canvas{
+  z-index: -9;
+}
+
+.eraser{
+  height: 50px;
+  background: rgb(58, 218, 106);
+  font-size: 1.5rem;
+}
+
+.brush-size-container{
+  position: relative;
+}
+
+.label{
+  position: absolute;
+  top: -10px;
+  left:0;
+  font-size: 1rem;
+  padding: 2px;
+  background: rgb(27, 27, 27);
+
+}
