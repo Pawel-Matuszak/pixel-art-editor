@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react'
 import backgroundImage from "../images/bg.png"
 
-const Canvas = ({color, secondaryColor, brushSize, eraser, getCanvasRef}) => {
+const Canvas = ({color, secondaryColor, brushSize, eraser, picker, exitPicker, getCanvasRef}) => {
 
   const canvasRef = useRef(null);
   const backgroundCanvasRef = useRef(null)
@@ -37,6 +37,20 @@ const Canvas = ({color, secondaryColor, brushSize, eraser, getCanvasRef}) => {
       var rect = canvas.getBoundingClientRect();
       const cursorX = Math.floor((e.clientX - rect.left)/canvasParams.transform);
       const cursorY = Math.floor((e.clientY - rect.top)/canvasParams.transform);
+      if(picker){
+        const imageData = context.getImageData(cursorX*canvasParams.transform,cursorY*canvasParams.transform, 1, 1);
+        if(!imageData.data[3]){
+          return;
+        }
+        const colorRgb = [...imageData.data].join(", ")
+        if(e.button===0){
+          color.hex = `rgb(${colorRgb})`
+        }else if(e.button===2){
+          secondaryColor.hex = `rgb(${colorRgb})`
+        }
+        exitPicker(false);
+        return;
+      }
       switch (brushSize) {
         case 1:
           (eraser) ? context.clearRect(cursorX,cursorY, 1, 1) :  context.fillRect(cursorX,cursorY, 1, 1);

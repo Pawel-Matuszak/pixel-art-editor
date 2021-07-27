@@ -6,9 +6,10 @@ const ClearAll = ({canvas}) => {
   }
 
   return (
-      <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}>
-        Clear all
-      </div>
+    <div style={{position: "relative"}}>
+      <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}>Clear all</div>
+      <span className="icon-label">ClearAll</span>
+    </div>
   )
 }
 

@@ -1,10 +1,14 @@
 import React from 'react'
 
-const ColorPicker = () => {
+const ColorPicker = ({handlePicker, picker}) => {
   return (
-    <div className="icon">
-      Color Picker
+    <div style={{position: "relative"}}>
+      <div className="icon" onClick={()=>handlePicker()} style={{background: (picker) ? "#fff" : ""}}>
+        Color Picker
+      </div>
+      <span className="icon-label">Color Picker</span>
     </div>
+    
   )
 }
 

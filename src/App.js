@@ -34,6 +34,14 @@ const App = () => {
   const handleEraser = () =>{
     setEraser(!eraser)
   }
+
+  const handlePicker = () =>{
+    setPicker(!picker)
+  }
+
+  const exitPicker = (value) =>{
+    setPicker(value)
+  }
   
   return (
     <div className="container">
@@ -43,8 +51,11 @@ const App = () => {
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="tools-container">
           <Eraser handleEraser={handleEraser} eraser={eraser}/>
-          <ColorPicker/>
+          <ColorPicker handlePicker={handlePicker} picker={picker}/>
           <ClearAll canvas={canvas}/>
+          {/* Fill */}
+          {/* Zoom */}
+          {/* Hilight */}
         </div>
         <div className="color-picker-container">
           <ColorSelect className={"secondary-color"} color={secondColor} getColor={getSecondaryColor}/>
@@ -54,7 +65,7 @@ const App = () => {
 
       {/* Canvas */}
       <div className="canvas-container">
-        <Canvas color={color} secondaryColor={secondColor} brushSize={brushSize} eraser={eraser} getCanvasRef={getCanvasRef}/>
+        <Canvas color={color} secondaryColor={secondColor} brushSize={brushSize} eraser={eraser} picker={picker} getCanvasRef={getCanvasRef} exitPicker={exitPicker}/>
       </div>
       
       {/* Options */}

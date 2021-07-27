@@ -136,7 +136,7 @@ body{
 
 .icon-label{
   text-align: center;
-  display: block;
+  display: none;
   position: absolute;
   top: -10px;
   left: 50%;
