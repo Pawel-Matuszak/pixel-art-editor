@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ColorPicker = ({handlePicker, picker}) => {
+const ColorPicker = ({handleToolChange, currentTool}) => {
   return (
     <div style={{position: "relative"}}>
-      <div className="icon" onClick={()=>handlePicker()} style={{background: (picker) ? "#fff" : ""}}>
+      <div className="icon" onClick={()=>handleToolChange(2)} style={{background: (currentTool===2) ? "#fff" : ""}}>
         Color Picker
       </div>
       <span className="icon-label">Color Picker</span>

@@ -5,15 +5,26 @@ import ClearAll from './Components/ClearAll'
 import ColorSelect from './Components/ColorSelect'
 import SizeSlider from './Components/SizeSlider'
 import ColorPicker from './Components/ColorPicker'
+import Fill from './Components/Fill'
+import Brush from './Components/Brush'
 
 const App = () => {
+  const tools = {
+    brush: 0,
+    eraser: 1,
+    picker: 2,
+    fill: 3,
+  }
+  
   const [canvas, setCanvas] = useState(null)
   const [color, setColor] = useState({hex: "#fff"});
   const [secondColor, setSecondColor] = useState({hex: "#000"});
   const [brushSize, setBrushSize] = useState(1)
-  const [eraser, setEraser] = useState(false)
-  const [picker, setPicker] = useState(false)
-
+  // const [eraser, setEraser] = useState(false)
+  // const [picker, setPicker] = useState(false)
+  // const [fill, setFill] = useState(false)
+  const [currentTool, setCurrentTool] = useState(tools.brush)
+  
 
   const getCanvasRef = (canvas) =>{
     setCanvas(canvas)
@@ -31,16 +42,24 @@ const App = () => {
     setBrushSize(value)
   }
 
-  const handleEraser = () =>{
-    setEraser(!eraser)
-  }
+  // const handleEraser = () =>{
+  //   setEraser(!eraser)
+  // }
 
-  const handlePicker = () =>{
-    setPicker(!picker)
-  }
+  // const handlePicker = () =>{
+  //   setPicker(!picker)
+  // }
 
-  const exitPicker = (value) =>{
-    setPicker(value)
+  // const handleFill = () =>{
+  //   setFill(!fill)
+  // }
+
+  // const exitPicker = (value) =>{
+  //   setPicker(value)
+  // }
+
+  const handleToolChange = (tool) =>{
+    setCurrentTool(tool)
   }
   
   return (
@@ -50,10 +69,11 @@ const App = () => {
       <div className="left-column-container">
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="tools-container">
-          <Eraser handleEraser={handleEraser} eraser={eraser}/>
-          <ColorPicker handlePicker={handlePicker} picker={picker}/>
-          <ClearAll canvas={canvas}/>
-          {/* Fill */}
+          <Brush handleToolChange={handleToolChange} currentTool={currentTool}/>
+          <Eraser handleToolChange={handleToolChange} currentTool={currentTool}/>
+          <ColorPicker handleToolChange={handleToolChange} currentTool={currentTool}/>
+          <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
+
           {/* Zoom */}
           {/* Hilight */}
         </div>
@@ -65,11 +85,22 @@ const App = () => {
 
       {/* Canvas */}
       <div className="canvas-container">
-        <Canvas color={color} secondaryColor={secondColor} brushSize={brushSize} eraser={eraser} picker={picker} getCanvasRef={getCanvasRef} exitPicker={exitPicker}/>
+        <Canvas 
+          color={color} 
+          secondaryColor={secondColor} 
+          brushSize={brushSize} 
+          // eraser={eraser} 
+          // picker={picker} 
+          currentTool={currentTool}
+          handleToolChange={handleToolChange}
+          getCanvasRef={getCanvasRef} 
+          // exitPicker={exitPicker}
+          />
       </div>
       
       {/* Options */}
       <div className="right-column-container">
+        <ClearAll canvas={canvas}/>
 
       </div>
     </div>
