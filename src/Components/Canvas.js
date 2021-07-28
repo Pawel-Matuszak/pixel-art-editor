@@ -108,40 +108,39 @@ const Canvas = ({color, secondaryColor, brushSize, eraser, picker, exitPicker, g
           const cursorCurrentX = cursorX*canvasParams.transform
           const cursorCurrentY = cursorY*canvasParams.transform
 
-          const currentPixel = context.getImageData(cursorCurrentX, cursorCurrentY, 1, 1).data.join()
+          const originPixel = context.getImageData(cursorCurrentX, cursorCurrentY, 1, 1).data.join()
 
           const matrix = []
-          function rightPixels(i){
-            const rightPixel = context.getImageData(cursorCurrentX + canvasParams.transform * i, cursorCurrentY, 1, 1).data.join()
+          function rightPixels(i, currentPixelX, currentPixelY){
+            const rightPixel = context.getImageData(currentPixelX + canvasParams.transform * i, currentPixelY, 1, 1).data.join()
 
-            if(currentPixel!==rightPixel || cursorCurrentX + canvasParams.transform * i > canvas.width){
+            if(originPixel!==rightPixel || currentPixelX + canvasParams.transform * i > canvas.width){
               return;
             }else{
               matrix.push({
-                x:(cursorCurrentX + canvasParams.transform * i)/canvasParams.transform, 
-                y:cursorCurrentY/canvasParams.transform
+                x:(currentPixelX + canvasParams.transform * i)/canvasParams.transform, 
+                y:currentPixelY/canvasParams.transform
               })
-              rightPixels(i+1)
+              rightPixels(i+1, currentPixelX, currentPixelY)
             }
           }
 
-          function leftPixels(i) {
-            const leftPixel = context.getImageData(cursorCurrentX - canvasParams.transform * i, cursorCurrentY, 1, 1).data.join()
+          function leftPixels(i, currentPixelX, currentPixelY) {
+            const leftPixel = context.getImageData(currentPixelX - canvasParams.transform * i, currentPixelY, 1, 1).data.join()
 
-            if(currentPixel!==leftPixel || cursorCurrentX - canvasParams.transform * i<0){
+            if(originPixel!==leftPixel || currentPixelX - canvasParams.transform * i<0){
               return
             }else{
               matrix.push({
-                x:(cursorCurrentX - canvasParams.transform * i)/canvasParams.transform, 
-                y:cursorCurrentY/canvasParams.transform
+                x:(currentPixelX - canvasParams.transform * i)/canvasParams.transform, 
+                y:currentPixelY/canvasParams.transform
               })
-              leftPixels(i+1)
+              leftPixels(i+1, currentPixelX, currentPixelY)
             }
           }
-          
 
-          rightPixels(0)
-          leftPixels(0)
+          rightPixels(0, cursorCurrentX, cursorCurrentY)
+          leftPixels(0, cursorCurrentX, cursorCurrentY)
 
           console.log(matrix);
           
