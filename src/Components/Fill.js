@@ -1,11 +1,15 @@
 import React from 'react'
+import Button from './Button'
 
 const Fill = ({handleToolChange, currentTool}) => {
   return (
-    <div style={{position: "relative"}}>
-      <div className="icon eraser" onClick={()=>handleToolChange(3)} style={{background: (currentTool===3) ? "#fff" : ""}}>Fill</div>
-      <span className="icon-label">Fill</span>
-    </div>
+    <Button 
+      handleToolChange={handleToolChange} 
+      currentTool={currentTool} 
+      toolId={3} 
+      label={"Fill"} 
+      icon={null} 
+      className={""}/>
   )
 }
 

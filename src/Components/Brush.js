@@ -1,11 +1,15 @@
 import React from 'react'
+import Button from './Button'
 
 const Brush = ({handleToolChange, currentTool}) => {
   return (
-    <div style={{position: "relative"}}>
-      <div className="icon eraser" onClick={()=>handleToolChange(0)} style={{background: (currentTool===0) ? "#fff" : ""}}>Brush</div>
-      <span className="icon-label">Brush</span>
-    </div>
+    <Button 
+      handleToolChange={handleToolChange} 
+      currentTool={currentTool} 
+      toolId={0} 
+      label={"Brush"} 
+      icon={null} 
+      className={""}/>
   )
 }
 
