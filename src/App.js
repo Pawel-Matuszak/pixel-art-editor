@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import Canvas from './Components/Canvas'
 import Eraser from './Components/Eraser'
 import ClearAll from './Components/ClearAll'
@@ -11,27 +11,25 @@ import Brush from './Components/Brush'
 import Zoom from './Components/Zoom'
 import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
+import ToggleHilight from './Components/ToggleHilight'
+import "@fortawesome/fontawesome-svg-core"
+
 
 const App = () => {
-  const tools = {
-    brush: 0,
-    eraser: 1,
-    picker: 2,
-    fill: 3,
-    fillAll: 4,
-    zoom: 5,
-  }
-  
   const [canvas, setCanvas] = useState(null)
   const [color, setColor] = useState({hex: "#fff"});
   const [secondColor, setSecondColor] = useState({hex: "#000"});
   const [brushSize, setBrushSize] = useState(1)
-  const [currentTool, setCurrentTool] = useState(tools.brush)
+  const [currentTool, setCurrentTool] = useState(0)
   const [zoom, setZoom] = useState(true)
   const [historyBtns, setHistoryBtns] = useState({undo: "", redo: ""})
   const [canvasClear, setCanvasClear] = useState(true)
+  const [hilight, setHilight] = useState(true)
 
-  
+  const getHilight = () =>{
+    setHilight(!hilight)
+  }
+
   const getCanvasClear = () =>{
     setCanvasClear(!canvasClear)
   }
@@ -89,7 +87,6 @@ const App = () => {
           {/* Shapes */}
           {/* Select */}
 
-          {/* Toggle hilight */}
         </div>
         <div className="color-picker-container">
           <ColorSelect className={"secondary-color"} color={secondColor} getColor={getSecondaryColor}/>
@@ -110,6 +107,7 @@ const App = () => {
           redoBtn={historyBtns.redo}
           zoom={zoom}
           canvasClear={canvasClear}
+          hilight={hilight}
           />
       </div>
       
@@ -118,6 +116,7 @@ const App = () => {
         <ClearAll canvas={canvas} getCanvasClear={getCanvasClear}/>
         <HistoryButtons getHistoryBtns={getHistoryBtns}/>
         <SaveImage canvas={canvas}/>
+        <ToggleHilight getHilight={getHilight} hilight={hilight} className={"hilight"}/>
       </div>
     </div>
   )

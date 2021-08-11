@@ -99,6 +99,12 @@ body{
   display: block;
 }
 
+.hilight-canvas{
+  z-index: 99;
+  position: absolute;
+  display: block;
+}
+
 .background-canvas{
   z-index: -9;
 }
@@ -149,3 +155,14 @@ body{
 .icon:hover + .icon-label{
   display: inline-block;
 }
+
+/* SLIDER */
+.slider-input{
+  appearance: none;
+}
+
+.slider::-webkit-slider-thumb{
+
+}
+
+/* A */

@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './Button'
+import { faFillDrip } from '@fortawesome/free-solid-svg-icons'
 
 const Fill = ({handleToolChange, currentTool}) => {
   return (
@@ -8,7 +9,7 @@ const Fill = ({handleToolChange, currentTool}) => {
       currentTool={currentTool} 
       toolId={3} 
       label={"Fill"} 
-      icon={null} 
+      icon={faFillDrip} 
       className={""}/>
   )
 }

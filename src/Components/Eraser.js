@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Button from './Button'
+import { faEraser } from '@fortawesome/free-solid-svg-icons'
 
 const Eraser = ({handleToolChange, currentTool}) => {
   
@@ -9,7 +10,7 @@ const Eraser = ({handleToolChange, currentTool}) => {
       currentTool={currentTool} 
       toolId={1} 
       label={"GUM"} 
-      icon={null} 
+      icon={faEraser} 
       className={"eraser"}/>
   )
 }

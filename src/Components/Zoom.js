@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './Button'
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons'
 
 const Zoom = ({handleToolChange, currentTool}) => {
   return (
@@ -8,7 +9,7 @@ const Zoom = ({handleToolChange, currentTool}) => {
       currentTool={currentTool} 
       toolId={5} 
       label={"Zoom"} 
-      icon={null} 
+      icon={faSearchPlus} 
       className={"zoom"}/>
   )
 }

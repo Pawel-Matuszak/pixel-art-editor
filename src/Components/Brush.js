@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './Button'
+import { faPaintBrush } from '@fortawesome/free-solid-svg-icons'
 
 const Brush = ({handleToolChange, currentTool}) => {
   return (
@@ -8,7 +9,7 @@ const Brush = ({handleToolChange, currentTool}) => {
       currentTool={currentTool} 
       toolId={0} 
       label={"Brush"} 
-      icon={null} 
+      icon={faPaintBrush} 
       className={""}/>
   )
 }

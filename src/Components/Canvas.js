@@ -2,10 +2,11 @@ import React, {useState, useRef, useEffect} from 'react'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import backgroundImage from "../images/bg.png"
 
-const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear}) => {
+const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight}) => {
 
   const canvasRef = useRef(null);
   const backgroundCanvasRef = useRef(null);
+  const hilightCanvasRef = useRef(null);
   const [canvasParams, setCanvasParams] = useState({width: 50, height: 40, transform:20, originX: 0, originY:0})
   const [offset, setOffset] = useState({x:0, y:0, scale: 1})
   const [historyQueue, setHistoryQueue] = useState({
@@ -13,6 +14,35 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     redo: []
   })
   
+  const mousePosition = (e, canvas, offset, canvasParams) =>{
+    var rect = canvas.getBoundingClientRect();
+    let cursorX = Math.floor((e.clientX - rect.left)/offset.scale/canvasParams.transform);
+    // console.log(e.clientX, rect.left);
+    let cursorY = Math.floor((e.clientY - rect.top)/offset.scale/canvasParams.transform);
+    return {cursorX, cursorY}
+  }
+
+  const brushDraw = (brushSize, cursorX, cursorY, context)=>{
+    //if pixel has already been drawn return
+    switch (brushSize) {
+      case 1:
+        context.fillRect(cursorX,cursorY, 1, 1);
+        break;
+      case 2:
+        context.fillRect(cursorX,cursorY, 2, 2);
+        break;
+      case 3:
+        context.fillRect(cursorX-1,cursorY-1, 3, 3);
+        break;
+      case 4:
+        context.fillRect(cursorX-2,cursorY-2, 4, 4);
+        break;
+
+      default:
+        break;
+    }
+  } 
+
   //Bg canvas
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
@@ -32,39 +62,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+    const hilightCanvas = hilightCanvasRef.current;
     context.setTransform(canvasParams.transform, 0, 0, canvasParams.transform, 0, 0, origin.x, origin.y);
     getCanvasRef(canvasRef)
-
-    //Set mouse pos
-    const mousePosition = (e) =>{
-      var rect = canvas.getBoundingClientRect();
-      let cursorX = Math.floor((e.clientX - rect.left)/offset.scale/canvasParams.transform);
-      // console.log(e.clientX, rect.left);
-      let cursorY = Math.floor((e.clientY - rect.top)/offset.scale/canvasParams.transform);
-      return {cursorX, cursorY}
-    }
-
-    //Tools functions
-    const brushDraw = (brushSize, cursorX, cursorY)=>{
-      //if pixel has already been drawn return
-      switch (brushSize) {
-        case 1:
-          context.fillRect(cursorX,cursorY, 1, 1);
-          break;
-        case 2:
-          context.fillRect(cursorX,cursorY, 2, 2);
-          break;
-        case 3:
-          context.fillRect(cursorX-1,cursorY-1, 3, 3);
-          break;
-        case 4:
-          context.fillRect(cursorX-2,cursorY-2, 4, 4);
-          break;
-
-        default:
-          break;
-      }
-    } 
 
     const eraser = (brushSize, cursorX, cursorY) =>{
       switch (brushSize) {
@@ -108,34 +108,17 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
     }
 
-    const zoomPixel = (e, cursorX, cursorY) =>{
-      if(e.type!=="click") return;
-      // const img = context.getImageData(0, 0, canvas.width, canvas.height)
-      // const origin = {x:0, y:0};         // canvas origin
-      // var scale = canvasParams.transform;                     // current scale
-      // function scaleAt(x, y, scaleBy) {  // at pixel coords x, y scale by scaleBy
-      //     scale *= scaleBy;
-      //     origin.x = x - (x - origin.x) * scaleBy;
-      //     origin.y = y - (y - origin.y) * scaleBy;
-      // }
-      // scaleAt(cursorX, cursorY, 1.1);   
-      // setCanvasParams({width: 50, height: 40, transform:scale, originX: origin.x, originY:origin.y})
-      // context.setTransform(scale, 0, 0, scale, origin.x, origin.y);
-      // console.log(origin, cursorX, cursorY, scale);
-      // context.putImageData(img, 0, 0)
-    }
-
     const handleTools = (e) => {
       e.preventDefault()
       
       //Get cursor position
-      const {cursorX, cursorY} = mousePosition(e)
+      const {cursorX, cursorY} = mousePosition(e, canvas, offset, canvasParams)
 
       //Check current tool
       switch (currentTool) {
         //Brush
         case 0:
-          brushDraw(brushSize, cursorX, cursorY)
+          brushDraw(brushSize, cursorX, cursorY, context)
           break;
 
         //Eraser
@@ -326,9 +309,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
           fillAll(e)
           break;
 
-        case 5:
-          zoomPixel(e, cursorX, cursorY)
-          break;
         default:
           break;
       }
@@ -344,23 +324,44 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
       //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
-        canvas.addEventListener("mousemove", handleTools)
+        hilightCanvas.addEventListener("mousemove", handleTools)
       }else{
-        canvas.removeEventListener("mousemove", handleTools)
+        hilightCanvas.removeEventListener("mousemove", handleTools)
       }
     }
-
     
-
-    canvas.addEventListener("mousedown", handleMouse)
+    hilightCanvas.addEventListener("mousedown", handleMouse)
     document.addEventListener("mouseup", handleMouse)
-    canvas.addEventListener("click", handleTools)
-    canvas.addEventListener("contextmenu", handleTools)
+    hilightCanvas.addEventListener("click", handleTools)
+    hilightCanvas.addEventListener("contextmenu", handleTools)
 
     return () => {
-      canvas.removeEventListener("mousedown", handleMouse)
-      canvas.removeEventListener("click", handleTools)
-      canvas.removeEventListener("contextmenu", handleTools)
+      hilightCanvas.removeEventListener("mousedown", handleMouse)
+      hilightCanvas.removeEventListener("click", handleTools)
+      hilightCanvas.removeEventListener("contextmenu", handleTools)
+    }
+  })
+
+  //Hilight canvas
+  useEffect(() => {
+    const canvas = hilightCanvasRef.current;
+    const context = canvas.getContext("2d");
+    if(!hilight){
+      context.clearRect(0,0, canvas.width, canvas.height);
+      return;
+    };
+    context.setTransform(canvasParams.transform, 0, 0, canvasParams.transform, 0, 0, origin.x, origin.y);
+
+    const handleHilight = (e)=>{
+      const {cursorX, cursorY} = mousePosition(e, canvas, offset, canvasParams)
+      context.fillStyle = "rgba(255,255,255,.3)"
+      context.clearRect(0,0, canvas.width, canvas.height);
+      brushDraw(brushSize, cursorX, cursorY, context)
+    }
+
+    canvas.addEventListener("mousemove", handleHilight)
+    return () => {
+      canvas.removeEventListener("mousemove", handleHilight)
     }
   })
 
@@ -370,6 +371,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     const undo = undoBtn.current;
     const redo = redoBtn.current;
+    const hilightCanvas = hilightCanvasRef.current;
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
@@ -409,12 +411,12 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     undo.addEventListener("click", undoHistory)
     redo.addEventListener("click", redoHistory)
-    canvas.addEventListener("mouseup", handleHistory)
+    hilightCanvas.addEventListener("mouseup", handleHistory)
     
     return () =>{
       undo.removeEventListener("click", undoHistory)
       redo.removeEventListener("click", redoHistory)
-      canvas.removeEventListener("mouseup", handleHistory)
+      hilightCanvas.removeEventListener("mouseup", handleHistory)
     }
   }, [historyQueue, undoBtn])
 
@@ -432,26 +434,26 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
   
   return (
-    <>
-      <TransformWrapper
-      initialScale={1}
-      maxScale={4}
-      disabled={zoom}
-      >
-         {({state})=>(
-           <>
-            <TransformComponent>
-              <canvas id="main-canvas" ref={canvasRef} 
-              onMouseEnter={
-                ()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})
-              } 
-              className="canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
-              <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
-            </TransformComponent>
-           </>
-         )}
-      </TransformWrapper>
-    </>
+    <TransformWrapper
+    initialScale={1}
+    maxScale={4}
+    disabled={zoom}
+    >
+        {({state})=>(
+          <>
+          <TransformComponent>
+            <canvas ref={hilightCanvasRef} className="hilight-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}
+            onMouseMove={
+              ()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})
+            }></canvas>
+
+            <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+
+            <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+          </TransformComponent>
+          </>
+        )}
+    </TransformWrapper>
   )
 }
 
