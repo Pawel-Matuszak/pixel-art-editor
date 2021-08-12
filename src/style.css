@@ -10,6 +10,11 @@ body{
   color: #707070;
 }
 
+/* cursors */
+.cursor-icon{
+  color: #f0f;
+}
+
 .container{
   width: 100vw;
   height: 100vh;
@@ -125,6 +130,8 @@ body{
   position: relative;
 }
 
+/* Icon */
+
 .icon{
   font-size: 1.5rem;
   padding: 5px;
@@ -158,11 +165,20 @@ body{
 
 /* SLIDER */
 .slider-input{
+  -webkit-appearance: none;
   appearance: none;
+  background: #fff;
+  height: 25px;
+  width: 150px;
 }
 
-.slider::-webkit-slider-thumb{
-
+.slider-input::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background: #f0f;
+  height: 25px;
+  width: 25px;
 }
 
 /* A */

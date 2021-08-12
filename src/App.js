@@ -82,7 +82,7 @@ const App = () => {
           <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
           {/* //fill bg? */}
 
-          <FillAll handleToolChange={handleToolChange} currentTool={currentTool}/>
+          {/* <FillAll handleToolChange={handleToolChange} currentTool={currentTool}/> */}
           <Zoom handleToolChange={handleToolChange} currentTool={currentTool}/>
           {/* Shapes */}
           {/* Select */}

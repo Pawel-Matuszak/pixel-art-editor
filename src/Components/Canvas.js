@@ -1,12 +1,18 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import backgroundImage from "../images/bg.png"
+import backgroundImage from "../content/bg.png"
+import brushImage from "../content/cursor/paint-brush-solid.svg"
+import eraserImage from "../content/cursor/eraser-solid.svg"
+import pickerImage from "../content/cursor/eye-dropper-solid.svg"
+import fillImage from "../content/cursor/fill-drip-solid.svg"
+import zoomImage from "../content/cursor/search-solid.svg"
 
 const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight}) => {
 
   const canvasRef = useRef(null);
   const backgroundCanvasRef = useRef(null);
   const hilightCanvasRef = useRef(null);
+  const [cursor, setCursor] = useState(brushImage)
   const [canvasParams, setCanvasParams] = useState({width: 50, height: 40, transform:20, originX: 0, originY:0})
   const [offset, setOffset] = useState({x:0, y:0, scale: 1})
   const [historyQueue, setHistoryQueue] = useState({
@@ -123,6 +129,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
         //Eraser
         case 1:
+          setCursor(eraserImage)
           eraser(brushSize, cursorX, cursorY)
           break;
         
@@ -329,12 +336,43 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         hilightCanvas.removeEventListener("mousemove", handleTools)
       }
     }
+
+    //Set cursor based on selected tool
+    const changeCursor = () =>{
+      switch(currentTool){
+        case 0:
+          setCursor(brushImage)
+          break;
+
+        //Eraser
+        case 1:
+          setCursor(eraserImage)
+          break;
+        
+        //Picker
+        case 2:
+          setCursor(pickerImage)
+          break;
+        
+        //Fill
+        case 3:
+          setCursor(fillImage)
+          break;
+
+        case 5:
+          setCursor(zoomImage)
+          break;
+
+        default:
+          setCursor(brushImage)
+          break;
+    }}
+    changeCursor()
     
     hilightCanvas.addEventListener("mousedown", handleMouse)
     document.addEventListener("mouseup", handleMouse)
     hilightCanvas.addEventListener("click", handleTools)
     hilightCanvas.addEventListener("contextmenu", handleTools)
-
     return () => {
       hilightCanvas.removeEventListener("mousedown", handleMouse)
       hilightCanvas.removeEventListener("click", handleTools)
@@ -432,27 +470,29 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     })
   }, [canvasClear])
 
-  
   return (
     <TransformWrapper
     initialScale={1}
     maxScale={4}
     disabled={zoom}
     >
-        {({state})=>(
-          <>
-          <TransformComponent>
-            <canvas ref={hilightCanvasRef} className="hilight-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}
-            onMouseMove={
-              ()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})
-            }></canvas>
+      {({state})=>(
+        <>
+        <TransformComponent>
+          <canvas ref={hilightCanvasRef} 
+            className="hilight-canvas" 
+            width={canvasParams.width*canvasParams.transform} 
+            height={canvasParams.height*canvasParams.transform}
+            onMouseMove={()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})}
+            style={{cursor: `url('${cursor}') 5 20, auto`}}
+          ></canvas>
 
-            <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+          <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
 
-            <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
-          </TransformComponent>
-          </>
-        )}
+          <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+        </TransformComponent>
+        </>
+      )}
     </TransformWrapper>
   )
 }
