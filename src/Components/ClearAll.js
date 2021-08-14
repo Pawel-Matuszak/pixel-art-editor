@@ -9,7 +9,7 @@ const ClearAll = ({canvas, getCanvasClear}) => {
   }
 
   return (
-    <div style={{position: "relative"}}>
+    <div style={{position: "relative", display:"inline-block"}}>
       <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}><FontAwesomeIcon icon={faTimesCircle}/></div>
       <span className="icon-label">ClearAll</span>
     </div>

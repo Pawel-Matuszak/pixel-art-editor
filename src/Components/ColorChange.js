@@ -10,7 +10,7 @@ const ColorChange = ({getColor, color}) => {
   }
 
   return (
-      <ChromePicker color={background} onChange={changeBgr} onChangeComplete={getColor}/>
+      <ChromePicker color={background} onChange={changeBgr} onChangeComplete={getColor} disableAlpha={true}/>
   )
 }
 

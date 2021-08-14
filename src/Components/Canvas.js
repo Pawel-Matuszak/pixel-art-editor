@@ -114,6 +114,24 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
     }
 
+    let mouseStart = 0
+    let mouseEnd = 0
+
+    const drawRect = (e) =>{
+      if(e.type==="mousedown"){
+        mouseStart = mousePosition(e, canvas, offset, canvasParams)
+        return;
+      }
+
+      mouseEnd = mousePosition(e, canvas, offset, canvasParams)
+
+      context.fillRect(mouseStart.cursorX, mouseStart.cursorY, mouseEnd.cursorX-mouseStart.cursorX, mouseEnd.cursorY-mouseStart.cursorY)
+
+      //works only on mouse move?????
+     
+
+    }
+
     const handleTools = (e) => {
       e.preventDefault()
       
@@ -312,8 +330,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
           
           break;
 
-        case 4:
-          fillAll(e)
+        //Rect
+        case 6:
+          drawRect(e)
           break;
 
         default:
@@ -328,13 +347,20 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }else if(e.buttons===2){
         context.fillStyle = secondaryColor.hex
       }
-
       //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
+        handleTools(e)
         hilightCanvas.addEventListener("mousemove", handleTools)
-      }else{
-        hilightCanvas.removeEventListener("mousemove", handleTools)
+        hilightCanvas.addEventListener("mouseup", handleMouseUp)
       }
+    }
+
+    //handle mouse up
+    const handleMouseUp = (e)=>{
+      handleTools(e)
+      hilightCanvas.removeEventListener("mouseup", handleMouseUp)
+
+      hilightCanvas.removeEventListener("mousemove", handleTools)
     }
 
     //Set cursor based on selected tool
@@ -370,12 +396,11 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     changeCursor()
     
     hilightCanvas.addEventListener("mousedown", handleMouse)
-    document.addEventListener("mouseup", handleMouse)
-    hilightCanvas.addEventListener("click", handleTools)
+    // hilightCanvas.addEventListener("click", handleTools)
     hilightCanvas.addEventListener("contextmenu", handleTools)
     return () => {
       hilightCanvas.removeEventListener("mousedown", handleMouse)
-      hilightCanvas.removeEventListener("click", handleTools)
+      // hilightCanvas.removeEventListener("click", handleTools)
       hilightCanvas.removeEventListener("contextmenu", handleTools)
     }
   })
@@ -384,7 +409,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
   useEffect(() => {
     const canvas = hilightCanvasRef.current;
     const context = canvas.getContext("2d");
-    if(!hilight){
+    if(!hilight || (currentTool!==0 && currentTool!==1 && currentTool!==2)){
       context.clearRect(0,0, canvas.width, canvas.height);
       return;
     };
@@ -401,7 +426,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     return () => {
       canvas.removeEventListener("mousemove", handleHilight)
     }
-  })
+  }, [zoom, hilight, currentTool, brushSize])
 
   //History handler
   useEffect(() => {
@@ -472,9 +497,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
   return (
     <TransformWrapper
-    initialScale={1}
-    maxScale={4}
-    disabled={zoom}
+      initialScale={1}
+      maxScale={4}
+      disabled={zoom}
     >
       {({state})=>(
         <>

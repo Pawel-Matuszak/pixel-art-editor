@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react'
-import { faSave } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSave,  faTimes, faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons'
 import Button from './Button'
 
 
@@ -18,7 +19,7 @@ const SaveImage = ({canvas}) => {
   const handleSubmit = async (e) =>{
     e.preventDefault()
     if(formData.name.length<=0 || formData.format.length<=0){
-      errMsg.current.innerHTML = "Set name and format";
+      errMsg.current.innerHTML = "Select name and format";
       return;
     };
     downloadImage();
@@ -42,25 +43,26 @@ const SaveImage = ({canvas}) => {
       className={"save"}/>
     {saveMenu && 
       <div className="save-menu-container">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="dropdown-container">
+          <div className="save-title">Save Image</div>
+          <div className="exit" onClick={()=>setSaveMenu(false)}><FontAwesomeIcon icon={faTimes}/></div>
           <input type="text" value={formData.name} onChange={(e)=>setFormData({name: e.target.value, format: formData.format})} placeholder="File name"/>
-
-          <div className="dropdown-container">
-            <div className="dropdown-header">
-              <div className="dropdown-header-title" onClick={()=>setDropdown(!dropdown)}>{formData.format || "Select format"}</div>
-            </div>
+          <div className="dropdown-header" onClick={()=>setDropdown(!dropdown)}>
+            <div className="dropdown-header-title" >{formData.format || "Select format"}</div>
+            <div className="caret">{dropdown ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}</div>
             {dropdown &&
               <div className="dropdown-list">
-                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "png"})}>PNG</div>
-                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "jpeg"})}>JPEG</div>
-                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "bmp"})}>BMP</div>
+                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "PNG"})}>PNG</div>
+                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "JPEG"})}>JPEG</div>
+                <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "BMP"})}>BMP</div>
               </div>
             }
-            <div className="err-msg" ref={errMsg}></div>
           </div>
-
+          
           <button type="submit">Save</button>          
           <a ref={saveImgRef}></a>
+          <div className="err-msg" ref={errMsg}></div>
+        
         </form>
       </div>
     }

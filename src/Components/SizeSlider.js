@@ -10,11 +10,11 @@ const SizeSlider = ({getBrushSize}) => {
 
   return (
     <div className="brush-size-container">
-      <div className="icon slider">
-        <div className="brush-size">{brushSize}</div>
+      <div className="slider">
+      <div className="slider-label">Brush size: <input type="text" value={brushSize}></input></div>
         <input type="range" className="slider-input" min="1" max="4" step="1" value={brushSize} onChange={handleBrushSize}></input>
       </div>
-      <span className="icon-label">Select brush size</span>
+      
     </div>
   )
 }

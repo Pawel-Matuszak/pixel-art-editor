@@ -12,12 +12,12 @@ const HistoryButtons = ({getHistoryBtns}) => {
 
   return (
     <>
-      <div style={{position: "relative"}}>
+      <div style={{position: "relative", display:"inline-block"}}>
         <div className="icon" ref={undoBtn}><FontAwesomeIcon icon={faUndo}/></div>
         <span className="icon-label">Undo</span>
       </div>
 
-      <div style={{position: "relative"}}>
+      <div style={{position: "relative", display:"inline-block"}}>
         <div className="icon" ref={redoBtn}><FontAwesomeIcon icon={faRedo}/></div>
         <span className="icon-label">Redo</span>
       </div>

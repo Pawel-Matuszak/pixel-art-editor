@@ -12,7 +12,10 @@ import Zoom from './Components/Zoom'
 import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
 import ToggleHilight from './Components/ToggleHilight'
+import Rectangle from './Components/Rectangle'
 import "@fortawesome/fontawesome-svg-core"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 const App = () => {
@@ -57,6 +60,12 @@ const App = () => {
     })
   }
 
+  const swapColors = (color, secondColor) =>{
+      const currentSecond = secondColor
+      setSecondColor(color)
+      setColor(currentSecond)
+  }
+
   const handleToolChange = (tool) =>{
     setCurrentTool(tool)
   }
@@ -71,26 +80,26 @@ const App = () => {
   
   return (
     <div className="container">
-      
       {/* Brushes and tools */}
       <div className="left-column-container">
-        <SizeSlider getBrushSize={getBrushSize}/>
         <div className="tools-container">
           <Brush handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Eraser handleToolChange={handleToolChange} currentTool={currentTool}/>
           <ColorPicker handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
-          {/* //fill bg? */}
-
           {/* <FillAll handleToolChange={handleToolChange} currentTool={currentTool}/> */}
           <Zoom handleToolChange={handleToolChange} currentTool={currentTool}/>
           {/* Shapes */}
-          {/* Select */}
+          <Rectangle handleToolChange={handleToolChange} currentTool={currentTool}/>
+          
+          {/* history, layers */}
 
         </div>
+        <SizeSlider getBrushSize={getBrushSize}/>
         <div className="color-picker-container">
           <ColorSelect className={"secondary-color"} color={secondColor} getColor={getSecondaryColor}/>
           <ColorSelect className={"primary-color"} color={color} getColor={getColor}/>
+          <div className="color-swap" onClick={()=>swapColors(color, secondColor)}><FontAwesomeIcon icon={faSyncAlt}/></div>
         </div>
       </div>
 
