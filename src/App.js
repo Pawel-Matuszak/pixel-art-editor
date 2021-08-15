@@ -16,6 +16,7 @@ import Rectangle from './Components/Rectangle'
 import "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import Settings from './Components/Settings'
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
   const [historyBtns, setHistoryBtns] = useState({undo: "", redo: ""})
   const [canvasClear, setCanvasClear] = useState(true)
   const [hilight, setHilight] = useState(true)
+  const [transform, setTransform] = useState(20)
 
   const getHilight = () =>{
     setHilight(!hilight)
@@ -60,6 +62,10 @@ const App = () => {
     })
   }
 
+  const getCanvasSize = (x)=>{
+    setTransform(canvas.current.width/x)
+  }
+
   const swapColors = (color, secondColor) =>{
       const currentSecond = secondColor
       setSecondColor(color)
@@ -79,6 +85,8 @@ const App = () => {
   }, [currentTool])
   
   return (
+    <>
+    
     <div className="container">
       {/* Brushes and tools */}
       <div className="left-column-container">
@@ -89,11 +97,9 @@ const App = () => {
           <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
           {/* <FillAll handleToolChange={handleToolChange} currentTool={currentTool}/> */}
           <Zoom handleToolChange={handleToolChange} currentTool={currentTool}/>
-          {/* Shapes */}
           <Rectangle handleToolChange={handleToolChange} currentTool={currentTool}/>
-          
-          {/* history, layers */}
-
+          {/* intro */}
+          {/* layers */}
         </div>
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="color-picker-container">
@@ -117,17 +123,20 @@ const App = () => {
           zoom={zoom}
           canvasClear={canvasClear}
           hilight={hilight}
+          transform={transform}
           />
       </div>
       
       {/* Options */}
       <div className="right-column-container">
-        <ClearAll canvas={canvas} getCanvasClear={getCanvasClear}/>
+        <Settings canvas={canvas} getCanvasSize={getCanvasSize}/>
         <HistoryButtons getHistoryBtns={getHistoryBtns}/>
         <SaveImage canvas={canvas}/>
         <ToggleHilight getHilight={getHilight} hilight={hilight} className={"hilight"}/>
+        <ClearAll canvas={canvas} getCanvasClear={getCanvasClear}/>
       </div>
     </div>
+    </>
   )
 }
 

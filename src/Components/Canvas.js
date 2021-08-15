@@ -7,18 +7,20 @@ import pickerImage from "../content/cursor/eye-dropper-solid.svg"
 import fillImage from "../content/cursor/fill-drip-solid.svg"
 import zoomImage from "../content/cursor/search-solid.svg"
 
-const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight}) => {
+const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight, transform}) => {
 
   const canvasRef = useRef(null);
   const backgroundCanvasRef = useRef(null);
   const hilightCanvasRef = useRef(null);
+  const shapesCanvasRef = useRef(null)
   const [cursor, setCursor] = useState(brushImage)
-  const [canvasParams, setCanvasParams] = useState({width: 50, height: 40, transform:20, originX: 0, originY:0})
+  const [canvasParams, setCanvasParams] = useState({width: 1000, height: 800, transform:transform, originX: 0, originY:0})
   const [offset, setOffset] = useState({x:0, y:0, scale: 1})
   const [historyQueue, setHistoryQueue] = useState({
     history: [],
     redo: []
   })
+  const [rectDraw, setRectDraw] = useState(false)
   
   const mousePosition = (e, canvas, offset, canvasParams) =>{
     var rect = canvas.getBoundingClientRect();
@@ -49,6 +51,17 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }
   } 
 
+  //draw rect
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const shapesCanvas = shapesCanvasRef.current;
+    const shapesContext = shapesCanvas.getContext("2d");
+
+    context.drawImage(shapesCanvas, 0,0, canvasParams.width/canvasParams.transform, canvasParams.height/canvasParams.transform)
+    shapesContext.clearRect(0,0,canvas.width, canvas.height)
+  }, [rectDraw])
+
   //Bg canvas
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
@@ -64,12 +77,21 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }
   }, [])
 
+  useEffect(() => {
+    setCanvasParams({width: canvasParams.width, height: canvasParams.height, transform:transform, originX: canvasParams.originX, originY:canvasParams.originY})
+  }, [transform])
+  
   //Main canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     const hilightCanvas = hilightCanvasRef.current;
+    const hilightContext = hilightCanvas.getContext("2d");
+    const shapesCanvas = shapesCanvasRef.current;
+    const shapesContext = shapesCanvas.getContext("2d");
+
     context.setTransform(canvasParams.transform, 0, 0, canvasParams.transform, 0, 0, origin.x, origin.y);
+    shapesContext.setTransform(canvasParams.transform, 0, 0, canvasParams.transform, 0, 0, origin.x, origin.y);
     getCanvasRef(canvasRef)
 
     const eraser = (brushSize, cursorX, cursorY) =>{
@@ -104,32 +126,36 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       handleToolChange(0)
     }
 
-    const fillAll = (e) =>{
-      if(e.button===0){
-        context.fillStyle = color.hex;
-        context.fillRect(0,0,canvas.width, canvas.height);
-      }else if(e.button===2){
-        context.fillStyle = secondaryColor.hex;
-        context.fillRect(0,0,canvas.width, canvas.height);
-      }
-    }
-
     let mouseStart = 0
     let mouseEnd = 0
 
     const drawRect = (e) =>{
       if(e.type==="mousedown"){
         mouseStart = mousePosition(e, canvas, offset, canvasParams)
+        if(e.buttons===1){
+          shapesContext.fillStyle = color.hex
+        }else if(e.buttons===2){
+          shapesContext.fillStyle = secondaryColor.hex
+        }
         return;
       }
 
       mouseEnd = mousePosition(e, canvas, offset, canvasParams)
+      shapesContext.clearRect(0,0,canvas.width, canvas.height)
 
-      context.fillRect(mouseStart.cursorX, mouseStart.cursorY, mouseEnd.cursorX-mouseStart.cursorX, mouseEnd.cursorY-mouseStart.cursorY)
+      shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY,1,1)
+      shapesContext.fillRect(mouseStart.cursorX, mouseEnd.cursorY,1,1)
+      shapesContext.fillRect(mouseEnd.cursorX, mouseStart.cursorY,1,1)
+      shapesContext.fillRect(mouseEnd.cursorX, mouseEnd.cursorY,1,1)
+      shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY, 1, mouseEnd.cursorY-mouseStart.cursorY)
+      shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY, mouseEnd.cursorX-mouseStart.cursorX, 1)
+      shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY+(mouseEnd.cursorY-mouseStart.cursorY), mouseEnd.cursorX-mouseStart.cursorX, 1)
+      shapesContext.fillRect(mouseStart.cursorX+(mouseEnd.cursorX-mouseStart.cursorX), mouseStart.cursorY, 1, mouseEnd.cursorY-mouseStart.cursorY+1)
 
-      //works only on mouse move?????
-     
-
+    
+      if(e.type==="mouseup"){
+        setRectDraw(!rectDraw)
+      }
     }
 
     const handleTools = (e) => {
@@ -237,102 +263,12 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
           quełełełełe.forEach(({x,y})=>{
             context.fillRect(x,y,1,1)
           })
-          
-          // const originPixel = context.getImageData(cursorCurrentX, cursorCurrentY, 1, 1).data.join()
 
-          // let matrix = []
-          // function rightPixels(i, currentPixelX, currentPixelY){
-          //   const rightPixel = context.getImageData(currentPixelX + canvasParams.transform * i, currentPixelY, 1, 1).data.join()
-
-          //   if(originPixel!==rightPixel || currentPixelX + canvasParams.transform * i > canvas.width){
-          //     return;
-          //   }else{
-          //     matrix.push({
-          //       x:(currentPixelX + canvasParams.transform * i)/canvasParams.transform, 
-          //       y:currentPixelY/canvasParams.transform
-          //     })
-          //     rightPixels(i+1, currentPixelX, currentPixelY)
-          //   }
-          // }
-
-          // function leftPixels(i, currentPixelX, currentPixelY) {
-          //   const leftPixel = context.getImageData(currentPixelX - canvasParams.transform * i, currentPixelY, 1, 1).data.join()
-
-          //   if(originPixel!==leftPixel || currentPixelX - canvasParams.transform * i<0){
-          //     return
-          //   }else{
-          //     matrix.push({
-          //       x:(currentPixelX - canvasParams.transform * i)/canvasParams.transform, 
-          //       y:currentPixelY/canvasParams.transform
-          //     })
-          //     leftPixels(i+1, currentPixelX, currentPixelY)
-          //   }
-          // }
-
-          // function downPixels(i, currentPixelX, currentPixelY) {
-          //   const downPixel = context.getImageData(currentPixelX, currentPixelY + canvasParams.transform * i, 1, 1).data.join()
-
-          //   if(originPixel!==downPixel || currentPixelY + canvasParams.transform * i>canvas.height){
-          //     return
-          //   }else{
-          //     matrix.push({
-          //       x:currentPixelX/canvasParams.transform, 
-          //       y:(currentPixelY + canvasParams.transform * i)/canvasParams.transform
-          //     })
-          //     downPixels(i+1, currentPixelX, currentPixelY)
-          //   }
-          // }
-
-          // function upPixels(i, currentPixelX, currentPixelY) {
-          //   const upPixel = context.getImageData(currentPixelX, currentPixelY - canvasParams.transform * i, 1, 1).data.join()
-
-          //   if(originPixel!==upPixel || currentPixelY - canvasParams.transform * i<0){
-          //     return 
-          //   }else{
-          //     matrix.push({
-          //       x:currentPixelX/canvasParams.transform, 
-          //       y:(currentPixelY - canvasParams.transform * i)/canvasParams.transform
-          //     })
-          //     upPixels(i+1, currentPixelX, currentPixelY)
-          //   }
-          // }
-
-          // function getUniqueListBy(arr, key, key2) {
-          //   return [...new Map(arr.map(item => [`${item[key]}+${item[key2]}`, item])).values()]
-          // }
-
-          // rightPixels(0, cursorCurrentX, cursorCurrentY)
-          // leftPixels(0, cursorCurrentX, cursorCurrentY)
-          // upPixels(0, cursorCurrentX, cursorCurrentY)
-          // downPixels(0, cursorCurrentX, cursorCurrentY)
-
-          // matrix.forEach(({x,y})=>{
-          //   upPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   downPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   rightPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   leftPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          // })
-
-          // matrix = getUniqueListBy(matrix, "x", "y")
-          
-          // matrix.forEach(({x,y})=>{
-          //   upPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   downPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   rightPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          //   leftPixels(0, x*canvasParams.transform, y*canvasParams.transform)
-          // })
-
-          // const unique = getUniqueListBy(matrix, "x", "y")
-
-          // unique.forEach(({x,y})=>{
-          //   context.fillRect(x,y,1,1)
-          // })
-          
           break;
 
         //Rect
         case 6:
-          drawRect(e)
+          drawRect(e, context, shapesContext)
           break;
 
         default:
@@ -349,18 +285,17 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
       //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
-        handleTools(e)
         hilightCanvas.addEventListener("mousemove", handleTools)
         hilightCanvas.addEventListener("mouseup", handleMouseUp)
+        handleTools(e)
       }
     }
 
     //handle mouse up
     const handleMouseUp = (e)=>{
-      handleTools(e)
-      hilightCanvas.removeEventListener("mouseup", handleMouseUp)
-
       hilightCanvas.removeEventListener("mousemove", handleTools)
+      hilightCanvas.removeEventListener("mouseup", handleMouseUp)
+      handleTools(e)
     }
 
     //Set cursor based on selected tool
@@ -426,7 +361,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     return () => {
       canvas.removeEventListener("mousemove", handleHilight)
     }
-  }, [zoom, hilight, currentTool, brushSize])
+  }, [zoom, hilight, currentTool, brushSize, canvasParams])
 
   //History handler
   useEffect(() => {
@@ -506,15 +441,16 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         <TransformComponent>
           <canvas ref={hilightCanvasRef} 
             className="hilight-canvas" 
-            width={canvasParams.width*canvasParams.transform} 
-            height={canvasParams.height*canvasParams.transform}
+            width={canvasParams.width} 
+            height={canvasParams.height}
             onMouseMove={()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})}
             style={{cursor: `url('${cursor}') 5 20, auto`}}
           ></canvas>
 
-          <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+          <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
+          <canvas id="shapes-canvas" ref={shapesCanvasRef} className="canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
 
-          <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width*canvasParams.transform} height={canvasParams.height*canvasParams.transform}></canvas>
+          <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
         </TransformComponent>
         </>
       )}
