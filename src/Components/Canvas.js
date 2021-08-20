@@ -60,6 +60,12 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     context.drawImage(shapesCanvas, 0,0, canvasParams.width/canvasParams.transform, canvasParams.height/canvasParams.transform)
     shapesContext.clearRect(0,0,canvas.width, canvas.height)
+
+    let newImage = context.getImageData(0,0,canvas.width, canvas.height)
+    setHistoryQueue({
+      history: [...historyQueue.history, newImage],
+      redo: []
+    })
   }, [rectDraw])
 
   //Bg canvas
@@ -158,6 +164,68 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
     }
 
+    //returns current pixel color in rgba (0,0,0,0)
+    const pixelColor = (x, y)=>{
+      return context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data.join()
+    }
+
+    const matchStartColor = (x, y, originPixelColor)=>{
+      return (pixelColor(x,y)==originPixelColor) ? true : false;
+    }
+
+    const fill = (e, cursorX, cursorY)=>{
+      if(e.type!=="mousedown") return;
+      const originPixelColor = pixelColor(cursorX,cursorY)
+      
+      //queued pixels
+      const pixelStack = [[cursorX,cursorY]]
+
+      while(pixelStack.length){
+        const pixelPop = pixelStack.pop()
+        let x = pixelPop[0]
+        let y = pixelPop[1]
+
+        //find the highest pixel thats in the fill area
+        while(y>=0 && matchStartColor(x,y,originPixelColor)){
+          y--
+        }
+        ++y
+        let left = false
+        let right = false
+
+        //go down from the highest pixel and add new pixels to the stack
+        while(y<canvasParams.height/canvasParams.transform && matchStartColor(x,y,originPixelColor)){
+          context.fillRect(x,y,1,1)
+
+          //check pixel on the left
+          if(x > 0){
+            if(matchStartColor(x-1,y,originPixelColor)){
+              if(!left){
+                pixelStack.push([x-1, y]);
+                left = true;
+              }
+            }else if(left){
+              left = false;
+            }
+          }
+
+          if(x < canvasParams.width/canvasParams.transform){
+            if(matchStartColor(x+1,y,originPixelColor)){
+              if(!right){
+                pixelStack.push([x+1, y]);
+                right = true;
+              }
+            }else if(right){
+              right = false;
+            }
+          }
+
+          y++
+        }
+      }
+      const imageData = context.getImageData(0,0,canvas.width, canvas.height).data
+    }
+
     const handleTools = (e) => {
       e.preventDefault()
       
@@ -184,86 +252,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         
         //Fill
         case 3:
-          if(e.type!=="click") return;
-          const cursorCurrentX = cursorX
-          const cursorCurrentY = cursorY
-          const originPixel = context.getImageData(cursorCurrentX, cursorCurrentY, 1, 1).data.join()
-
-          let quełełełełe = []
-          function findLeft(originPixelColor, currentPixelX, currentPixelY) {
-            if(originPixelColor!==context.getImageData(currentPixelX-1, currentPixelY, 1, 1).data.join() || currentPixelX-1 < 0){
-              return true;
-            }else{
-              quełełełełe.push({
-                x:currentPixelX-1, 
-                y:currentPixelY
-              })
-              return false;
-            }
-          }
-          function findRight(originPixelColor, currentPixelX, currentPixelY) {
-            if(originPixelColor!==context.getImageData(currentPixelX+1, currentPixelY, 1, 1).data.join() || currentPixelX+1 > canvas.width/canvasParams.transform){
-              return true;
-            }else{
-              quełełełełe.push({
-                x:currentPixelX+1, 
-                y:currentPixelY
-              })
-              return false;
-            }
-          }
-          function findUp(originPixelColor, currentPixelX, currentPixelY) {
-            if(originPixelColor!==context.getImageData(currentPixelX, currentPixelY-1, 1, 1).data.join() || currentPixelY-1<0){
-              return true; 
-            }else{
-              quełełełełe.push({
-                x:currentPixelX, 
-                y:currentPixelY-1
-              })
-              return false;
-            }
-          }
-          function findDown(originPixelColor, currentPixelX, currentPixelY) {
-            if(originPixelColor!==context.getImageData(currentPixelX, currentPixelY+1, 1, 1).data.join() || currentPixelY+1 > canvas.height/canvasParams.transform){
-              return true;
-            }else{
-              quełełełełe.push({
-                x:currentPixelX, 
-                y:currentPixelY+1
-              })
-              return false;
-            }
-          }
-          // findLeft(originPixel, cursorCurrentX, cursorCurrentY)
-          // findRight(originPixel, cursorCurrentX, cursorCurrentY)
-          // findUp(originPixel, cursorCurrentX, cursorCurrentY)
-          // findDown(originPixel, cursorCurrentX, cursorCurrentY)
-          let findLeftValue = findLeft(originPixel, cursorCurrentX, cursorCurrentY)
-          let findRightValue = findRight(originPixel, cursorCurrentX, cursorCurrentY)
-          let findUpValue = findUp(originPixel, cursorCurrentX, cursorCurrentY)
-          let findDownValue = findDown(originPixel, cursorCurrentX, cursorCurrentY)
-          console.log(cursorCurrentY, canvas.height/canvasParams.transform);
-
-          for (let i = 0; true; i++) {
-            if(findLeftValue && findRightValue && findUpValue && findDownValue){
-              break;
-            }else{
-              //TODO
-              //fix find functions
-              //set params of find functions to previous pixel x and y
-              findLeftValue = findLeft(originPixel, cursorCurrentX-i, cursorCurrentY)
-              findRightValue = findRight(originPixel, cursorCurrentX+i, cursorCurrentY)
-              findUpValue = findUp(originPixel, cursorCurrentX, cursorCurrentY-i)
-              findDownValue = findDown(originPixel, cursorCurrentX, cursorCurrentY+i)
-              console.log(findLeftValue, findRightValue, findUpValue, findDownValue);
-              console.log(quełełełełe);
-            }
-          }
-
-          quełełełełe.forEach(({x,y})=>{
-            context.fillRect(x,y,1,1)
-          })
-
+          fill(e, cursorX, cursorY)
           break;
 
         //Rect

@@ -57,6 +57,7 @@ body{
   position: absolute;
   top: 20px;
   right: 33px;
+  cursor: pointer;
 }
 
 .secondary-color-container{
@@ -180,6 +181,12 @@ body{
 
 .icon:hover + .icon-label{
   display: inline-block;
+}
+
+.drawRect{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* SLIDER */
