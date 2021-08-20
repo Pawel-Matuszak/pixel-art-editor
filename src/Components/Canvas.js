@@ -169,8 +169,16 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       return context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data.join()
     }
 
-    const matchStartColor = (x, y, originPixelColor)=>{
-      return (pixelColor(x,y)==originPixelColor) ? true : false;
+    const matchStartColor = (x, y, originPixelColor, e)=>{
+      let pixel = pixelColor(x,y)
+      
+      if(e.button==0){
+        if(pixel===`${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a}`) return false;
+      }else if(e.button==2){
+        if(pixel===`${secondaryColor.rgb.r},${secondaryColor.rgb.g},${secondaryColor.rgb.b},${secondaryColor.rgb.a}`) return false;
+      }
+      
+      return (pixel==originPixelColor) ? true : false;
     }
 
     const fill = (e, cursorX, cursorY)=>{
@@ -181,12 +189,13 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       const pixelStack = [[cursorX,cursorY]]
 
       while(pixelStack.length){
+        console.log(pixelStack);
         const pixelPop = pixelStack.pop()
         let x = pixelPop[0]
         let y = pixelPop[1]
 
         //find the highest pixel thats in the fill area
-        while(y>=0 && matchStartColor(x,y,originPixelColor)){
+        while(y>=0 && matchStartColor(x,y,originPixelColor, e)){
           y--
         }
         ++y
@@ -194,12 +203,12 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         let right = false
 
         //go down from the highest pixel and add new pixels to the stack
-        while(y<canvasParams.height/canvasParams.transform && matchStartColor(x,y,originPixelColor)){
+        while(y<canvasParams.height/canvasParams.transform && matchStartColor(x,y,originPixelColor, e)){
           context.fillRect(x,y,1,1)
 
           //check pixel on the left
           if(x > 0){
-            if(matchStartColor(x-1,y,originPixelColor)){
+            if(matchStartColor(x-1,y,originPixelColor, e)){
               if(!left){
                 pixelStack.push([x-1, y]);
                 left = true;
@@ -210,7 +219,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
           }
 
           if(x < canvasParams.width/canvasParams.transform){
-            if(matchStartColor(x+1,y,originPixelColor)){
+            if(matchStartColor(x+1,y,originPixelColor, e)){
               if(!right){
                 pixelStack.push([x+1, y]);
                 right = true;
@@ -219,7 +228,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
               right = false;
             }
           }
-
           y++
         }
       }

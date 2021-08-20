@@ -21,8 +21,8 @@ import Settings from './Components/Settings'
 
 const App = () => {
   const [canvas, setCanvas] = useState(null)
-  const [color, setColor] = useState({hex: "#fff"});
-  const [secondColor, setSecondColor] = useState({hex: "#000"});
+  const [color, setColor] = useState({hex: "#fff", rgb: {r:255, g:255, b:255, a:255}});
+  const [secondColor, setSecondColor] = useState({hex: "#000", rgb: {r:0, g:0, b:0, a:255}});
   const [brushSize, setBrushSize] = useState(1)
   const [currentTool, setCurrentTool] = useState(0)
   const [zoom, setZoom] = useState(true)
