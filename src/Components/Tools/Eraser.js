@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
-import Button from './Button'
-import { faEraser } from '@fortawesome/free-solid-svg-icons'
+import Button from '../Button'
+import eraserImage from "../../content/eraser.png"
+
 
 const Eraser = ({handleToolChange, currentTool}) => {
   
@@ -10,7 +11,7 @@ const Eraser = ({handleToolChange, currentTool}) => {
       currentTool={currentTool} 
       toolId={1} 
       label={"GUM"} 
-      icon={faEraser} 
+      icon={eraserImage} 
       className={"eraser"}/>
   )
 }

@@ -110,7 +110,7 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(25, 25, 25);
+  background: rgb(56, 56, 56);
   padding: 5rem .5rem;
   width: 160px;
 }
@@ -151,19 +151,23 @@ body{
 /* Icon */
 
 .icon{
-  font-size: 1.5rem;
-  padding: 5px;
+  padding: 22px;
   margin: 5px;
-  width: 50px;
-  border: 2px solid #707070;
+  width: 40px;
+  height: 40px;
   text-align: center;
   user-select: none;
   display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: #1a1a1a 1px 1px 1px 2px;
 }
 
 .icon:hover{
   cursor: pointer;
   background: rgb(56, 56, 56);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .icon-label{

@@ -1,11 +1,13 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import backgroundImage from "../content/bg.png"
-import brushImage from "../content/cursor/paint-brush-solid.svg"
-import eraserImage from "../content/cursor/eraser-solid.svg"
-import pickerImage from "../content/cursor/eye-dropper-solid.svg"
-import fillImage from "../content/cursor/fill-drip-solid.svg"
-import zoomImage from "../content/cursor/search-solid.svg"
+
+//Cursor images
+import brushImage from "../content/pencil.png"
+import eraserImage from "../content/eraser.png"
+import pickerImage from "../content/picker.png"
+import fillImage from "../content/fillbucket.png"
+import zoomImage from "../content/zoom.png"
 
 const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight, transform}) => {
 
@@ -166,16 +168,18 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     //returns current pixel color in rgba (0,0,0,0)
     const pixelColor = (x, y)=>{
-      return context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data.join()
+      const pixelData = context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data;
+      const colorArray = [...pixelData];
+      colorArray.pop();
+      return colorArray.join();
     }
 
     const matchStartColor = (x, y, originPixelColor, e)=>{
       let pixel = pixelColor(x,y)
-      
       if(e.button==0){
-        if(pixel===`${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a}`) return false;
+        if(pixel===`${color.rgb.r},${color.rgb.g},${color.rgb.b}`) return false;
       }else if(e.button==2){
-        if(pixel===`${secondaryColor.rgb.r},${secondaryColor.rgb.g},${secondaryColor.rgb.b},${secondaryColor.rgb.a}`) return false;
+        if(pixel===`${secondaryColor.rgb.r},${secondaryColor.rgb.g},${secondaryColor.rgb.b}`) return false;
       }
       
       return (pixel==originPixelColor) ? true : false;
@@ -189,7 +193,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       const pixelStack = [[cursorX,cursorY]]
 
       while(pixelStack.length){
-        console.log(pixelStack);
         const pixelPop = pixelStack.pop()
         let x = pixelPop[0]
         let y = pixelPop[1]
@@ -231,7 +234,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
           y++
         }
       }
-      const imageData = context.getImageData(0,0,canvas.width, canvas.height).data
     }
 
     const handleTools = (e) => {
@@ -244,28 +246,27 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       switch (currentTool) {
         //Brush
         case 0:
-          brushDraw(brushSize, cursorX, cursorY, context)
+          brushDraw(brushSize, cursorX, cursorY, context);
           break;
 
         //Eraser
         case 1:
-          setCursor(eraserImage)
-          eraser(brushSize, cursorX, cursorY)
+          eraser(brushSize, cursorX, cursorY);
           break;
         
         //Picker
         case 2:
-          picker(e, cursorX, cursorY)
+          picker(e, cursorX, cursorY);
           break;
         
         //Fill
         case 3:
-          fill(e, cursorX, cursorY)
+          fill(e, cursorX, cursorY);
           break;
 
         //Rect
         case 6:
-          drawRect(e, context, shapesContext)
+          drawRect(e, context, shapesContext);
           break;
 
         default:
@@ -441,7 +442,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
             width={canvasParams.width} 
             height={canvasParams.height}
             onMouseMove={()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})}
-            style={{cursor: `url('${cursor}') 5 20, auto`}}
+            style={{cursor: `url('${cursor}') 0 40, auto`}}
           ></canvas>
 
           <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width} height={canvasParams.height}></canvas>

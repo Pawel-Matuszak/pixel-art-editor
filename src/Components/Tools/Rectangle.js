@@ -1,7 +1,5 @@
 import React from 'react'
-import Button from './Button'
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons'
-import rectImg from "../content/rect.png"
+import rectImg from "../../content/rect.png"
 
 const Rectangle = ({handleToolChange, currentTool}) => {
   return (

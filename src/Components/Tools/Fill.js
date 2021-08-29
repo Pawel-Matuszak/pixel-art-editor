@@ -1,14 +1,15 @@
 import React from 'react'
-import Button from './Button'
+import Button from '../Button'
+import fillImage from "../../content/fillbucket.png"
 
 const Fill = ({handleToolChange, currentTool}) => {
   return (
     <Button 
       handleToolChange={handleToolChange} 
       currentTool={currentTool} 
-      toolId={4} 
-      label={"Fill All"} 
-      icon={null} 
+      toolId={3} 
+      label={"Fill"} 
+      icon={fillImage} 
       className={""}/>
   )
 }

@@ -1,18 +1,17 @@
 import React, {useState, useEffect} from 'react'
 import Canvas from './Components/Canvas'
-import Eraser from './Components/Eraser'
+import Eraser from './Components/Tools/Eraser'
 import ClearAll from './Components/ClearAll'
 import ColorSelect from './Components/ColorSelect'
-import SizeSlider from './Components/SizeSlider'
-import ColorPicker from './Components/ColorPicker'
-import Fill from './Components/Fill'
-import FillAll from './Components/FillAll'
-import Brush from './Components/Brush'
-import Zoom from './Components/Zoom'
+import SizeSlider from './Components/Tools/SizeSlider'
+import ColorPicker from './Components/Tools/ColorPicker'
+import Fill from './Components/Tools/Fill'
+import Brush from './Components/Tools/Brush'
+import Zoom from './Components/Tools/Zoom'
 import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
 import ToggleHilight from './Components/ToggleHilight'
-import Rectangle from './Components/Rectangle'
+import Rectangle from './Components/Tools/Rectangle'
 import "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
@@ -63,7 +62,7 @@ const App = () => {
   }
 
   const getCanvasSize = (x)=>{
-    setTransform(canvas.current.width/x)
+    setTransform(Math.ceil(canvas.current.width/x))
   }
 
   const swapColors = (color, secondColor) =>{
@@ -95,11 +94,11 @@ const App = () => {
           <Eraser handleToolChange={handleToolChange} currentTool={currentTool}/>
           <ColorPicker handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
-          {/* <FillAll handleToolChange={handleToolChange} currentTool={currentTool}/> */}
           <Zoom handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Rectangle handleToolChange={handleToolChange} currentTool={currentTool}/>
           {/* intro */}
           {/* layers */}
+          {/* grid */}
         </div>
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="color-picker-container">
