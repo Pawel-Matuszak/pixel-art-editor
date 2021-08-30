@@ -5,7 +5,7 @@ import hilightOffIcon from "../content/bulbOff.png"
 const ToggleHilight = ({getHilight, hilight, className}) => {
   return (
     <div style={{position: "relative", display:"inline-block"}}>
-      <div className={`icon ${className}`} onClick={()=> getHilight()} style={{background: (hilight) ? "rgba(255, 255, 255, 0.35)" : ""}}>{(hilight) ? <img src={hilightOnIcon}/> : <img src={hilightOffIcon}/>}</div>
+      <div className={`icon ${className}`} onClick={()=> getHilight()} style={{background: (hilight) ? "rgb(78, 78, 78)" : ""}}>{(hilight) ? <img src={hilightOnIcon}/> : <img src={hilightOffIcon}/>}</div>
       <span className="icon-label">Hilight</span>
     </div>
   )

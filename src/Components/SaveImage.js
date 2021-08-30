@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react'
 import { faSave,  faTimes, faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons'
 import Button from './Button'
 import saveIcon from "../content/saveCH.png"
+import saveButton from "../content/saveBtn.png"
 import timesIcon from "../content/times.png"
 import caretIcon from "../content/caret.png"
 
@@ -60,7 +61,9 @@ const SaveImage = ({canvas}) => {
             }
           </div>
           
-          <button type="submit">Save</button>          
+          <button type="submit">
+            <img src={saveButton} alt="save"/>  
+          </button>          
           <a ref={saveImgRef}></a>
           <div className="err-msg" ref={errMsg}></div>
         
