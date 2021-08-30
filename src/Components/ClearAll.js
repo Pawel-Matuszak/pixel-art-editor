@@ -1,6 +1,6 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import clearAllIcon from "../content/times.png"
+
 
 const ClearAll = ({canvas, getCanvasClear}) => {
   const handleClearAll = (canvas) =>{
@@ -10,7 +10,7 @@ const ClearAll = ({canvas, getCanvasClear}) => {
 
   return (
     <div style={{position: "relative", display:"inline-block"}}>
-      <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}><FontAwesomeIcon icon={faTimesCircle}/></div>
+      <div className="icon clear-all" onClick={()=>handleClearAll(canvas)}><img src={clearAllIcon}/></div>
       <span className="icon-label">ClearAll</span>
     </div>
   )

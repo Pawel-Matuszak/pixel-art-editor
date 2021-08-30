@@ -11,9 +11,9 @@ const ColorSelect = ({className, color, getColor}) => {
 
   return (
     <>
-      <div className={className} style={{backgroundColor: color.hex}} onClick={toggleColorPicker}></div>
+      <div className={className} style={{backgroundColor: `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`}} onClick={toggleColorPicker}></div>
         {colorPicker && <>
-          <span className="color-picker"><ColorChange color={color.hex} getColor={getColor}/></span>
+          <span className="color-picker"><ColorChange color={color} getColor={getColor}/></span>
           <span className="color-picker-exit" onClick={()=>setColorPicker(false)}></span>
         </>}
     </>

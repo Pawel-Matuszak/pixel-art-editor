@@ -10,7 +10,7 @@ const Eraser = ({handleToolChange, currentTool}) => {
       handleToolChange={handleToolChange} 
       currentTool={currentTool} 
       toolId={1} 
-      label={"GUM"} 
+      label={"Eraser"} 
       icon={eraserImage} 
       className={"eraser"}/>
   )

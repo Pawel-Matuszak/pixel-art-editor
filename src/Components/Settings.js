@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faCog } from '@fortawesome/free-solid-svg-icons'
+import settingsIcon from "../content/cog.png"
+import timesIcon from "../content/times.png"
 import Button from './Button'
 
 const Settings = ({canvas, getCanvasSize}) => {
@@ -25,21 +25,21 @@ const Settings = ({canvas, getCanvasSize}) => {
       <Button
         handleToolChange={setSettings} 
         toolId={!settings} 
-        icon={faCog}
+        icon={settingsIcon}
         label={"Settings"} 
         className={"settings"}/>
       {settings && 
         <div className="save-menu-container">
           <div className="settings-menu-container">
             <div className="settings-title">Select canvas size</div>
-            <div className="exit" onClick={()=>setSettings(false)}><FontAwesomeIcon icon={faTimes}/></div>
+            <div className="exit" onClick={()=>setSettings(false)}><img src={timesIcon}/></div>
             <div className="options-size">
               <div className="option-item" onClick={()=>optionPick(90)}>90x72</div>
               <div className="option-item" onClick={()=>optionPick(80)}>80x64</div>
               <div className="option-item" onClick={()=>optionPick(60)}>60x48</div>
+              <div className="option-item" onClick={()=>optionPick(50)}>50x40</div>
               <div className="option-item" onClick={()=>optionPick(40)}>40x32</div>
               <div className="option-item" onClick={()=>optionPick(20)}>20x16</div>
-              <div className="option-item" onClick={()=>optionPick(10)}>10x8</div>
             </div>
           {confirm && 
           <div className="confirm-container">

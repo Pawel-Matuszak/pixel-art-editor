@@ -32,6 +32,10 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     return {cursorX, cursorY}
   }
 
+  const getColorInRgb = (color)=>{
+    return `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`;
+  }
+
   const brushDraw = (brushSize, cursorX, cursorY, context)=>{
     //if pixel has already been drawn return
     switch (brushSize) {
@@ -94,7 +98,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     const hilightCanvas = hilightCanvasRef.current;
-    const hilightContext = hilightCanvas.getContext("2d");
     const shapesCanvas = shapesCanvasRef.current;
     const shapesContext = shapesCanvas.getContext("2d");
 
@@ -125,11 +128,16 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     const picker = (e, cursorX, cursorY) =>{
       const imageData = context.getImageData(cursorX*canvasParams.transform,cursorY*canvasParams.transform, 1, 1);
       if(!imageData.data[3]) return;
-      const colorRgb = imageData.data.join(", ")
+      const colorRgb = {
+        r: imageData.data[0],
+        g: imageData.data[1],
+        b: imageData.data[2],
+        a: imageData.data[3]
+      }
       if(e.button===0){
-        color.hex = `rgb(${colorRgb})`
+        color.rgb = colorRgb
       }else if(e.button===2){
-        secondaryColor.hex = `rgb(${colorRgb})`
+        secondaryColor.rgb = colorRgb
       }
       handleToolChange(0)
     }
@@ -141,15 +149,15 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       if(e.type==="mousedown"){
         mouseStart = mousePosition(e, canvas, offset, canvasParams)
         if(e.buttons===1){
-          shapesContext.fillStyle = color.hex
+          shapesContext.fillStyle = getColorInRgb(color);
         }else if(e.buttons===2){
-          shapesContext.fillStyle = secondaryColor.hex
+          shapesContext.fillStyle = getColorInRgb(secondaryColor);
         }
         return;
       }
 
-      mouseEnd = mousePosition(e, canvas, offset, canvasParams)
-      shapesContext.clearRect(0,0,canvas.width, canvas.height)
+      mouseEnd = mousePosition(e, canvas, offset, canvasParams);
+      shapesContext.clearRect(0,0,canvas.width, canvas.height);
 
       shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY,1,1)
       shapesContext.fillRect(mouseStart.cursorX, mouseEnd.cursorY,1,1)
@@ -168,23 +176,23 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     //returns current pixel color in rgba (0,0,0,0)
     const pixelColor = (x, y)=>{
-      const pixelData = context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data;
-      const colorArray = [...pixelData];
-      colorArray.pop();
-      return colorArray.join();
+      return context.getImageData(x*canvasParams.transform, y*canvasParams.transform, 1, 1).data.join();
     }
 
     const matchStartColor = (x, y, originPixelColor, e)=>{
       let pixel = pixelColor(x,y)
+      
+      //anty infinite loop sth idk
+      color.rgb.a = 255;
+      secondaryColor.rgb.a = 255;
       if(e.button==0){
-        if(pixel===`${color.rgb.r},${color.rgb.g},${color.rgb.b}`) return false;
+        if(pixel===`${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a}`) return false;
       }else if(e.button==2){
-        if(pixel===`${secondaryColor.rgb.r},${secondaryColor.rgb.g},${secondaryColor.rgb.b}`) return false;
+        if(pixel===`${secondaryColor.rgb.r},${secondaryColor.rgb.g},${secondaryColor.rgb.b},${secondaryColor.rgb.a}`) return false;
       }
       
       return (pixel==originPixelColor) ? true : false;
     }
-
     const fill = (e, cursorX, cursorY)=>{
       if(e.type!=="mousedown") return;
       const originPixelColor = pixelColor(cursorX,cursorY)
@@ -239,13 +247,14 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     const handleTools = (e) => {
       e.preventDefault()
       
-      //Get cursor position
+      //Get cursor current position
       const {cursorX, cursorY} = mousePosition(e, canvas, offset, canvasParams)
 
-      //Check current tool
+      //use selected tool
       switch (currentTool) {
         //Brush
         case 0:
+          if(e.type==="contextmenu") return;
           brushDraw(brushSize, cursorX, cursorY, context);
           break;
 
@@ -277,9 +286,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     const handleMouse =  (e) =>{
       //handle mouse buttons
       if(e.buttons===1){
-        context.fillStyle = color.hex
+        context.fillStyle = getColorInRgb(color);
       }else if(e.buttons===2){
-        context.fillStyle = secondaryColor.hex
+        context.fillStyle = getColorInRgb(secondaryColor);
       }
       //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
@@ -289,7 +298,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
     }
 
-    //handle mouse up
+    //event on mouse up
     const handleMouseUp = (e)=>{
       hilightCanvas.removeEventListener("mousemove", handleTools)
       hilightCanvas.removeEventListener("mouseup", handleMouseUp)

@@ -12,9 +12,7 @@ import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
 import ToggleHilight from './Components/ToggleHilight'
 import Rectangle from './Components/Tools/Rectangle'
-import "@fortawesome/fontawesome-svg-core"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import swapImage from "./content/swap-colors.png"
 import Settings from './Components/Settings'
 
 
@@ -27,7 +25,7 @@ const App = () => {
   const [zoom, setZoom] = useState(true)
   const [historyBtns, setHistoryBtns] = useState({undo: "", redo: ""})
   const [canvasClear, setCanvasClear] = useState(true)
-  const [hilight, setHilight] = useState(true)
+  const [hilight, setHilight] = useState(false)
   const [transform, setTransform] = useState(20)
 
   const getHilight = () =>{
@@ -104,7 +102,7 @@ const App = () => {
         <div className="color-picker-container">
           <ColorSelect className={"secondary-color"} color={secondColor} getColor={getSecondaryColor}/>
           <ColorSelect className={"primary-color"} color={color} getColor={getColor}/>
-          <div className="color-swap" onClick={()=>swapColors(color, secondColor)}><FontAwesomeIcon icon={faSyncAlt}/></div>
+          <div className="color-swap" onClick={()=>swapColors(color, secondColor)}><img src={swapImage}/></div>
         </div>
       </div>
 

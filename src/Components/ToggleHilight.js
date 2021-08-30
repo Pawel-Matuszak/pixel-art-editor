@@ -1,12 +1,11 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
-
+import hilightOnIcon from "../content/bulb.png"
+import hilightOffIcon from "../content/bulbOff.png"
 
 const ToggleHilight = ({getHilight, hilight, className}) => {
   return (
     <div style={{position: "relative", display:"inline-block"}}>
-      <div className={`icon ${className}`} onClick={()=> getHilight()} style={{background: (hilight) ? "#fff" : ""}}><FontAwesomeIcon icon={faLightbulb}/></div>
+      <div className={`icon ${className}`} onClick={()=> getHilight()} style={{background: (hilight) ? "rgba(255, 255, 255, 0.35)" : ""}}>{(hilight) ? <img src={hilightOnIcon}/> : <img src={hilightOffIcon}/>}</div>
       <span className="icon-label">Hilight</span>
     </div>
   )

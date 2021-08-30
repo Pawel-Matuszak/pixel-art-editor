@@ -1,8 +1,9 @@
 import React, {useState, useRef} from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave,  faTimes, faCaretDown, faCaretUp} from '@fortawesome/free-solid-svg-icons'
 import Button from './Button'
-
+import saveIcon from "../content/saveCH.png"
+import timesIcon from "../content/times.png"
+import caretIcon from "../content/caret.png"
 
 const SaveImage = ({canvas}) => {
 
@@ -38,18 +39,18 @@ const SaveImage = ({canvas}) => {
     <Button
       handleToolChange={setSaveMenu} 
       toolId={!saveMenu} 
-      icon={faSave}
+      icon={saveIcon}
       label={"Save"} 
       className={"save"}/>
     {saveMenu && 
       <div className="save-menu-container">
         <form onSubmit={handleSubmit} className="dropdown-container">
           <div className="save-title">Save Image</div>
-          <div className="exit" onClick={()=>setSaveMenu(false)}><FontAwesomeIcon icon={faTimes}/></div>
+          <div className="exit" onClick={()=>setSaveMenu(false)}><img src={timesIcon}/></div>
           <input type="text" value={formData.name} onChange={(e)=>setFormData({name: e.target.value, format: formData.format})} placeholder="File name"/>
           <div className="dropdown-header" onClick={()=>setDropdown(!dropdown)}>
             <div className="dropdown-header-title" >{formData.format || "Select format"}</div>
-            <div className="caret">{dropdown ? <FontAwesomeIcon icon={faCaretUp}/> : <FontAwesomeIcon icon={faCaretDown}/>}</div>
+            <div className="caret"><img style={{transform: (dropdown) ? "scaleY(1)" : "scaleY(-1)", width: "20px", marginTop: "5px"}}src={caretIcon}/></div>
             {dropdown &&
               <div className="dropdown-list">
                 <div className="dropdown-list-item" onClick={()=>setFormData({name: formData.name, format: "PNG"})}>PNG</div>

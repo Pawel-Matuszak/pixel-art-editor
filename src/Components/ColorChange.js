@@ -6,7 +6,7 @@ const ColorChange = ({getColor, color}) => {
   const [background, setBackground] = useState(color);
 
   const changeBgr = (color)=>{
-    setBackground(color.hex)
+    setBackground(`rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`)
   }
 
   return (
