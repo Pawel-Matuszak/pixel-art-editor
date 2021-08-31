@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
-import settingsIcon from "../content/cog.png"
-import timesIcon from "../content/times.png"
+import settingsIcon from "../res/cog.png"
+import timesIcon from "../res/times.png"
 import Button from './Button'
 
 const Settings = ({canvas, getCanvasSize, transform}) => {

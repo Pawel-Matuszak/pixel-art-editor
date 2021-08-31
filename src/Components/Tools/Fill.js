@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '../Button'
-import fillImage from "../../content/fillbucket.png"
+import fillImage from "../../res/fillbucket.png"
 
 const Fill = ({handleToolChange, currentTool}) => {
   return (

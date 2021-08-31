@@ -1,13 +1,13 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import backgroundImage from "../content/bg.png"
+import backgroundImage from "../res/bg.png"
 
 //Cursor images
-import brushImage from "../content/pencil.png"
-import eraserImage from "../content/eraser.png"
-import pickerImage from "../content/picker.png"
-import fillImage from "../content/fillbucket.png"
-import zoomImage from "../content/zoom.png"
+import brushImage from "../res/pencil.png"
+import eraserImage from "../res/eraser.png"
+import pickerImage from "../res/picker.png"
+import fillImage from "../res/fillbucket.png"
+import zoomImage from "../res/zoom.png"
 
 const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight, transform}) => {
 

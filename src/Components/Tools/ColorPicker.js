@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '../Button'
-import pickerImage from "../../content/picker.png"
+import pickerImage from "../../res/picker.png"
 
 const ColorPicker = ({handleToolChange, currentTool}) => {
   return (

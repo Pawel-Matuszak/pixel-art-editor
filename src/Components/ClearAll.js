@@ -1,5 +1,5 @@
 import React from 'react'
-import clearAllIcon from "../content/times.png"
+import clearAllIcon from "../res/times.png"
 
 
 const ClearAll = ({canvas, getCanvasClear}) => {

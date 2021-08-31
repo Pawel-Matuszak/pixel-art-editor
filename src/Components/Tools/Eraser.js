@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Button from '../Button'
-import eraserImage from "../../content/eraser.png"
+import eraserImage from "../../res/eraser.png"
 
 
 const Eraser = ({handleToolChange, currentTool}) => {

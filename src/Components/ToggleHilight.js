@@ -1,6 +1,6 @@
 import React from 'react'
-import hilightOnIcon from "../content/bulb.png"
-import hilightOffIcon from "../content/bulbOff.png"
+import hilightOnIcon from "../res/bulb.png"
+import hilightOffIcon from "../res/bulbOff.png"
 
 const ToggleHilight = ({getHilight, hilight, className}) => {
   return (

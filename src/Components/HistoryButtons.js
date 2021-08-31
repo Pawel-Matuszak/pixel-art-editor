@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react'
-import undoRedoIcon from "../content/undo-redo.png"
+import undoRedoIcon from "../res/undo-redo.png"
 
 const HistoryButtons = ({getHistoryBtns}) => {
   const undoBtn = useRef(null)

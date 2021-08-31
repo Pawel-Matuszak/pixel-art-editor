@@ -1,5 +1,5 @@
 import React from 'react'
-import rectImg from "../../content/rect.png"
+import rectImg from "../../res/rect.png"
 
 const Rectangle = ({handleToolChange, currentTool}) => {
   return (

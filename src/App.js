@@ -12,7 +12,7 @@ import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
 import ToggleHilight from './Components/ToggleHilight'
 import Rectangle from './Components/Tools/Rectangle'
-import swapImage from "./content/swap-colors.png"
+import swapImage from "./res/swap-colors.png"
 import Settings from './Components/Settings'
 
 

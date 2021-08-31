@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from '../Button'
-import brushImage from "../../content/pencil.png"
+import brushImage from "../../res/pencil.png"
 
 
 const Brush = ({handleToolChange, currentTool}) => {
