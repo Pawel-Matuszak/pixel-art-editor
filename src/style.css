@@ -103,6 +103,7 @@ body{
   margin: 0 20px;
   border: 5px solid transparent;
   border-image: url("./content/border.png") 24;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .canvas{
@@ -114,6 +115,11 @@ body{
   z-index: 99;
   position: absolute;
   display: block;
+}
+
+.hilight-canvas:focus{
+  border: none;
+  outline: none;
 }
 
 .background-canvas{
@@ -331,6 +337,7 @@ body{
   padding: 2px 15px;
   margin: 7px;
   background: rgb(49, 49, 49);
+  border: 3px solid #28211a;
   color: #e0e0e0;
   font-size: 1.4rem;
   border-radius: 3px;
@@ -378,6 +385,7 @@ body{
   left: 0;
   width: 100%;
   background: rgb(45, 45, 45);
+  border: 3px solid #28211a;
   font-size: 1.4rem;
   z-index: 999;
 }

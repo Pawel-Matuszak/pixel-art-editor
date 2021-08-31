@@ -3,6 +3,7 @@ import { faSave,  faTimes, faCaretDown, faCaretUp} from '@fortawesome/free-solid
 import Button from './Button'
 import saveIcon from "../content/saveCH.png"
 import saveButton from "../content/saveBtn.png"
+import saveButtonHover from "../content/saveBtnHover.png"
 import timesIcon from "../content/times.png"
 import caretIcon from "../content/caret.png"
 
@@ -62,7 +63,15 @@ const SaveImage = ({canvas}) => {
           </div>
           
           <button type="submit">
-            <img src={saveButton} alt="save"/>  
+            <img 
+            src={saveButton} 
+            onMouseEnter={(e)=>{
+              e.target.src=`${saveButtonHover}`;
+            }} 
+            onMouseLeave={(e)=>{
+              e.target.src=`${saveButton}`;
+            }} 
+            alt="save"/>  
           </button>          
           <a ref={saveImgRef}></a>
           <div className="err-msg" ref={errMsg}></div>
