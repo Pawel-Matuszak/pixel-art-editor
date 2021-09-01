@@ -4,7 +4,6 @@ import ColorChange from './ColorChange'
 const ColorSelect = ({className, color, getColor}) => {
 
   const [colorPicker, setColorPicker] = useState(false)
-
   const toggleColorPicker = () =>{
     setColorPicker(!colorPicker);
   }
