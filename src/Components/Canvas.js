@@ -439,9 +439,13 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
   return (
     <TransformWrapper
-      initialScale={1}
+      initialScale={.9}
+      minScale={.2}
       maxScale={4}
       disabled={zoom}
+      centerZoomedOut={true}
+      centerOnInit={true}
+      wheel={{step:.05}}
     >
       {({state})=>(
         <>
@@ -453,10 +457,8 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
             onMouseMove={()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})}
             style={{cursor: `url('${cursor}') 0 40, auto`}}
           ></canvas>
-
           <canvas id="main-canvas" ref={canvasRef} className="canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
           <canvas id="shapes-canvas" ref={shapesCanvasRef} className="canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
-
           <canvas ref={backgroundCanvasRef} className="background-canvas" width={canvasParams.width} height={canvasParams.height}></canvas>
         </TransformComponent>
         </>
