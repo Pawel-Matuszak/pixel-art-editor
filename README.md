@@ -3,8 +3,8 @@
 
 
 ## Description
-Application for drawing images in a pixel art style. 
-My goal for this project was to get a better understanding of react function components and hooks.
+Application for drawing images in a pixel art style.  
+My goal for this project was to get a better understanding of react function components and hooks.  
 Only technology that I used is React.
 
 
