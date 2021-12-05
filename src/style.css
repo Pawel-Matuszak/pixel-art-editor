@@ -117,13 +117,13 @@ body{
   display: block;
 }
 
-.hilight-canvas{
+.highlight-canvas{
   z-index: 99;
   position: absolute;
   display: block;
 }
 
-.hilight-canvas:focus{
+.highlight-canvas:focus{
   border: none;
   outline: none;
 }

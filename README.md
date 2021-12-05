@@ -1,22 +1,35 @@
 
-
 #  ![App logo](/src/res/logo.png) Pixel fill - react app
 
 
 ## Description
-App allows user to draw on canvas using diferent tools and colors.  It's like paint, but worse.
+Application for drawing images in a pixel art style. 
+My goal for this project was to get a better understanding of react function components and hooks.
+Only technology that I used is React.
+
+
+## Features
+* __Brush__ - drawing tool. Size can be changed from 1px to 4px
+* __Eraser__ - remove drawn pixels. Size can be changed
+* __Color Picker__ - select any color from the canvas and set it as primary (LMB) or secondary (RMB)
+* __Fill__ - algorithm to find nearby empty space and fill it with color
+* __Zoom__ - uses react-zoom-pan-pinch package to handle zooming
+* __Rectangle tool__ - draw rectangle
+* __Size slider__ - change size of the brush and eraser
+* __Primary and Secondary color__ - select RGB colors (no alpha)
+* __Settings__ -  select size of the canvas
+* __Undo and Redo__ - erase or restore the last change made on the canvas
+* __Save__ -  download image in **png**, **jpg** or **bmp** format.
+* __Highlight toggle__ - turn on/off highlight where the pixel would be drawn
+* __Clear all button__ - reset canvas
+
+
 ## Gallery
 ### Final version
->
-![enter image description here](/gallery/main.png)
+>![finished app](/gallery/main.png)
 
-### Save menu
-> You can save image using one of three available formats: **png**, **jpg** or **bmp**.
-![enter image description here](/gallery/save.PNG)
+### Save menu:
+> ![save menu](/gallery/save.PNG)
 
 ### Settings:
-> for now only allows user to select canvas size from the list
-![enter image description here](/gallery/settings.PNG)
-
-### Previous version
-> beta version![enter image description here](/gallery/alpha.PNG)
+>![settings menu](/gallery/settings.PNG)

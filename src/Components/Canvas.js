@@ -9,11 +9,11 @@ import pickerImage from "../res/picker.png"
 import fillImage from "../res/fillbucket.png"
 import zoomImage from "../res/zoom.png"
 
-const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, hilight, transform}) => {
+const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRef, currentTool, handleToolChange, zoom, canvasClear, highlight, transform}) => {
 
   const canvasRef = useRef(null);
   const backgroundCanvasRef = useRef(null);
-  const hilightCanvasRef = useRef(null);
+  const highlightCanvasRef = useRef(null);
   const shapesCanvasRef = useRef(null)
   const [cursor, setCursor] = useState(brushImage)
   const [canvasParams, setCanvasParams] = useState({width: 1000, height: 800, transform:transform, originX: 0, originY:0})
@@ -97,7 +97,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    const hilightCanvas = hilightCanvasRef.current;
+    const highlightCanvas = highlightCanvasRef.current;
     const shapesCanvas = shapesCanvasRef.current;
     const shapesContext = shapesCanvas.getContext("2d");
 
@@ -292,16 +292,16 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
       //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
-        hilightCanvas.addEventListener("mousemove", handleTools)
-        hilightCanvas.addEventListener("mouseup", handleMouseUp)
+        highlightCanvas.addEventListener("mousemove", handleTools)
+        highlightCanvas.addEventListener("mouseup", handleMouseUp)
         handleTools(e)
       }
     }
 
     //event on mouse up
     const handleMouseUp = (e)=>{
-      hilightCanvas.removeEventListener("mousemove", handleTools)
-      hilightCanvas.removeEventListener("mouseup", handleMouseUp)
+      highlightCanvas.removeEventListener("mousemove", handleTools)
+      highlightCanvas.removeEventListener("mouseup", handleMouseUp)
       handleTools(e)
     }
 
@@ -337,38 +337,38 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }}
     changeCursor()
     
-    hilightCanvas.addEventListener("mousedown", handleMouse)
-    // hilightCanvas.addEventListener("click", handleTools)
-    hilightCanvas.addEventListener("contextmenu", handleTools)
+    highlightCanvas.addEventListener("mousedown", handleMouse)
+    // highlightCanvas.addEventListener("click", handleTools)
+    highlightCanvas.addEventListener("contextmenu", handleTools)
     return () => {
-      hilightCanvas.removeEventListener("mousedown", handleMouse)
-      // hilightCanvas.removeEventListener("click", handleTools)
-      hilightCanvas.removeEventListener("contextmenu", handleTools)
+      highlightCanvas.removeEventListener("mousedown", handleMouse)
+      // highlightCanvas.removeEventListener("click", handleTools)
+      highlightCanvas.removeEventListener("contextmenu", handleTools)
     }
   })
 
-  //Hilight canvas
+  //Highlight canvas
   useEffect(() => {
-    const canvas = hilightCanvasRef.current;
+    const canvas = highlightCanvasRef.current;
     const context = canvas.getContext("2d");
-    if(!hilight || (currentTool!==0 && currentTool!==1 && currentTool!==2)){
+    if(!highlight || (currentTool!==0 && currentTool!==1 && currentTool!==2)){
       context.clearRect(0,0, canvas.width, canvas.height);
       return;
     };
     context.setTransform(canvasParams.transform, 0, 0, canvasParams.transform, 0, 0, origin.x, origin.y);
 
-    const handleHilight = (e)=>{
+    const handleHighlight = (e)=>{
       const {cursorX, cursorY} = mousePosition(e, canvas, offset, canvasParams)
       context.fillStyle = "rgba(255,255,255,.3)"
       context.clearRect(0,0, canvas.width, canvas.height);
       brushDraw(brushSize, cursorX, cursorY, context)
     }
 
-    canvas.addEventListener("mousemove", handleHilight)
+    canvas.addEventListener("mousemove", handleHighlight)
     return () => {
-      canvas.removeEventListener("mousemove", handleHilight)
+      canvas.removeEventListener("mousemove", handleHighlight)
     }
-  }, [zoom, hilight, currentTool, brushSize, canvasParams])
+  }, [zoom, highlight, currentTool, brushSize, canvasParams])
 
   //History handler
   useEffect(() => {
@@ -376,7 +376,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     const undo = undoBtn.current;
     const redo = redoBtn.current;
-    const hilightCanvas = hilightCanvasRef.current;
+    const highlightCanvas = highlightCanvasRef.current;
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
@@ -416,12 +416,12 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
     undo.addEventListener("click", undoHistory)
     redo.addEventListener("click", redoHistory)
-    hilightCanvas.addEventListener("mouseup", handleHistory)
+    highlightCanvas.addEventListener("mouseup", handleHistory)
     
     return () =>{
       undo.removeEventListener("click", undoHistory)
       redo.removeEventListener("click", redoHistory)
-      hilightCanvas.removeEventListener("mouseup", handleHistory)
+      highlightCanvas.removeEventListener("mouseup", handleHistory)
     }
   }, [historyQueue, undoBtn])
 
@@ -450,8 +450,8 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       {({state})=>(
         <>
         <TransformComponent>
-          <canvas ref={hilightCanvasRef} 
-            className="hilight-canvas" 
+          <canvas ref={highlightCanvasRef} 
+            className="highlight-canvas" 
             width={canvasParams.width} 
             height={canvasParams.height}
             onMouseMove={()=>setOffset({x: state.positionX, y:state.positionY, scale: state.scale})}

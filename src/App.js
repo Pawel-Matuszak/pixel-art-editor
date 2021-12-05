@@ -10,7 +10,7 @@ import Brush from './Components/Tools/Brush'
 import Zoom from './Components/Tools/Zoom'
 import HistoryButtons from './Components/HistoryButtons'
 import SaveImage from './Components/SaveImage'
-import ToggleHilight from './Components/ToggleHilight'
+import ToggleHighlight from './Components/ToggleHighlight'
 import Rectangle from './Components/Tools/Rectangle'
 import swapImage from "./res/swap-colors.png"
 import Settings from './Components/Settings'
@@ -25,11 +25,11 @@ const App = () => {
   const [zoom, setZoom] = useState(true)
   const [historyBtns, setHistoryBtns] = useState({undo: "", redo: ""})
   const [canvasClear, setCanvasClear] = useState(true)
-  const [hilight, setHilight] = useState(false)
+  const [highlight, setHighlight] = useState(false)
   const [transform, setTransform] = useState(20)
 
-  const getHilight = () =>{
-    setHilight(!hilight)
+  const getHighlight = () =>{
+    setHighlight(!highlight)
   }
 
   const getCanvasClear = () =>{
@@ -119,7 +119,7 @@ const App = () => {
           redoBtn={historyBtns.redo}
           zoom={zoom}
           canvasClear={canvasClear}
-          hilight={hilight}
+          highlight={highlight}
           transform={transform}
           />
       </div>
@@ -129,7 +129,7 @@ const App = () => {
         <Settings canvas={canvas} getCanvasSize={getCanvasSize}/>
         <HistoryButtons getHistoryBtns={getHistoryBtns}/>
         <SaveImage canvas={canvas}/>
-        <ToggleHilight getHilight={getHilight} hilight={hilight} className={"hilight"}/>
+        <ToggleHighlight getHighlight={getHighlight} highlight={highlight} className={"highlight"}/>
         <ClearAll canvas={canvas} getCanvasClear={getCanvasClear}/>
       </div>
     </div>
