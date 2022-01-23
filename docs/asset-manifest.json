@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/pixel-art-editor/static/css/main.1e39606e.chunk.css",
+    "main.css": "/pixel-art-editor/static/css/main.b4188690.chunk.css",
     "main.js": "/pixel-art-editor/static/js/main.724ca0d2.chunk.js",
     "main.js.map": "/pixel-art-editor/static/js/main.724ca0d2.chunk.js.map",
     "runtime-main.js": "/pixel-art-editor/static/js/runtime-main.8e660977.js",
@@ -8,7 +8,7 @@
     "static/js/2.c1e68443.chunk.js": "/pixel-art-editor/static/js/2.c1e68443.chunk.js",
     "static/js/2.c1e68443.chunk.js.map": "/pixel-art-editor/static/js/2.c1e68443.chunk.js.map",
     "index.html": "/pixel-art-editor/index.html",
-    "static/css/main.1e39606e.chunk.css.map": "/pixel-art-editor/static/css/main.1e39606e.chunk.css.map",
+    "static/css/main.b4188690.chunk.css.map": "/pixel-art-editor/static/css/main.b4188690.chunk.css.map",
     "static/js/2.c1e68443.chunk.js.LICENSE.txt": "/pixel-art-editor/static/js/2.c1e68443.chunk.js.LICENSE.txt",
     "static/media/bg.fd8af3fd.png": "/pixel-art-editor/static/media/bg.fd8af3fd.png",
     "static/media/style.css": "/pixel-art-editor/static/media/pixelFont.81f6c7f8.ttf"
@@ -16,7 +16,7 @@
   "entrypoints": [
     "static/js/runtime-main.8e660977.js",
     "static/js/2.c1e68443.chunk.js",
-    "static/css/main.1e39606e.chunk.css",
+    "static/css/main.b4188690.chunk.css",
     "static/js/main.724ca0d2.chunk.js"
   ]
 }
