@@ -94,9 +94,6 @@ const App = () => {
           <Fill handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Zoom handleToolChange={handleToolChange} currentTool={currentTool}/>
           <Rectangle handleToolChange={handleToolChange} currentTool={currentTool}/>
-          {/* intro */}
-          {/* layers */}
-          {/* grid */}
         </div>
         <SizeSlider getBrushSize={getBrushSize}/>
         <div className="color-picker-container">
