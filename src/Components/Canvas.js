@@ -27,7 +27,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
   const mousePosition = (e, canvas, offset, canvasParams) =>{
     var rect = canvas.getBoundingClientRect();
     let cursorX = Math.floor((e.clientX - rect.left)/offset.scale/canvasParams.transform);
-    // console.log(e.clientX, rect.left);
     let cursorY = Math.floor((e.clientY - rect.top)/offset.scale/canvasParams.transform);
     return {cursorX, cursorY}
   }
@@ -37,7 +36,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
   }
 
   const brushDraw = (brushSize, cursorX, cursorY, context)=>{
-    //if pixel has already been drawn return
     switch (brushSize) {
       case 1:
         context.fillRect(cursorX,cursorY, 1, 1);
@@ -57,7 +55,7 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }
   } 
 
-  //draw rect
+  //draw rect logic
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -74,7 +72,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     })
   }, [rectDraw])
 
-  //Bg canvas
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
     const context = canvas.getContext("2d");
@@ -93,7 +90,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     setCanvasParams({width: canvasParams.width, height: canvasParams.height, transform:transform, originX: canvasParams.originX, originY:canvasParams.originY})
   }, [transform])
   
-  //Main canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -197,7 +193,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       if(e.type!=="mousedown") return;
       const originPixelColor = pixelColor(cursorX,cursorY)
       
-      //queued pixels
       const pixelStack = [[cursorX,cursorY]]
 
       while(pixelStack.length){
@@ -205,7 +200,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         let x = pixelPop[0]
         let y = pixelPop[1]
 
-        //find the highest pixel thats in the fill area
         while(y>=0 && matchStartColor(x,y,originPixelColor, e)){
           y--
         }
@@ -213,11 +207,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
         let left = false
         let right = false
 
-        //go down from the highest pixel and add new pixels to the stack
         while(y<canvasParams.height/canvasParams.transform && matchStartColor(x,y,originPixelColor, e)){
           context.fillRect(x,y,1,1)
 
-          //check pixel on the left
           if(x > 0){
             if(matchStartColor(x-1,y,originPixelColor, e)){
               if(!left){
@@ -252,28 +244,23 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
 
       //use selected tool
       switch (currentTool) {
-        //Brush
         case 0:
           if(e.type==="contextmenu") return;
           brushDraw(brushSize, cursorX, cursorY, context);
           break;
 
-        //Eraser
         case 1:
           eraser(brushSize, cursorX, cursorY);
           break;
         
-        //Picker
         case 2:
           picker(e, cursorX, cursorY);
           break;
         
-        //Fill
         case 3:
           fill(e, cursorX, cursorY);
           break;
 
-        //Rect
         case 6:
           drawRect(e, context, shapesContext);
           break;
@@ -284,13 +271,11 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }
 
     const handleMouse =  (e) =>{
-      //handle mouse buttons
       if(e.buttons===1){
         context.fillStyle = getColorInRgb(color);
       }else if(e.buttons===2){
         context.fillStyle = getColorInRgb(secondaryColor);
       }
-      //hanle mouse drag
       if(e.type === "mousedown" && (e.buttons===1 || e.buttons===2)){
         highlightCanvas.addEventListener("mousemove", handleTools)
         highlightCanvas.addEventListener("mouseup", handleMouseUp)
@@ -298,31 +283,26 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
       }
     }
 
-    //event on mouse up
     const handleMouseUp = (e)=>{
       highlightCanvas.removeEventListener("mousemove", handleTools)
       highlightCanvas.removeEventListener("mouseup", handleMouseUp)
       handleTools(e)
     }
 
-    //Set cursor based on selected tool
     const changeCursor = () =>{
       switch(currentTool){
         case 0:
           setCursor(brushImage)
           break;
 
-        //Eraser
         case 1:
           setCursor(eraserImage)
           break;
         
-        //Picker
         case 2:
           setCursor(pickerImage)
           break;
         
-        //Fill
         case 3:
           setCursor(fillImage)
           break;
@@ -338,11 +318,9 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     changeCursor()
     
     highlightCanvas.addEventListener("mousedown", handleMouse)
-    // highlightCanvas.addEventListener("click", handleTools)
     highlightCanvas.addEventListener("contextmenu", handleTools)
     return () => {
       highlightCanvas.removeEventListener("mousedown", handleMouse)
-      // highlightCanvas.removeEventListener("click", handleTools)
       highlightCanvas.removeEventListener("contextmenu", handleTools)
     }
   })
@@ -425,7 +403,6 @@ const Canvas = ({color, secondaryColor, brushSize, undoBtn, redoBtn, getCanvasRe
     }
   }, [historyQueue, undoBtn])
 
-  //Clear all saves to history
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
