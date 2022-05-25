@@ -12,7 +12,7 @@ Website: https://pawel-matuszak.github.io/pixel-art-editor/
 * __Brush__ - drawing tool. Size can be changed from 1px to 4px
 * __Eraser__ - remove drawn pixels. Size can be changed
 * __Color Picker__ - select any color from the canvas and set it as primary (LMB) or secondary (RMB)
-* __Fill__ - bucket fill. Fills empty space with color
+* __Fill__ - bucket fill. Fills empty space with color (flood fill algorithm)
 * __Zoom__ - uses react-zoom-pan-pinch package to handle zooming
 * __Rectangle tool__ - draw rectangle
 * __Size slider__ - change size of the brush and eraser
