@@ -3,19 +3,24 @@ import timesIcon from "@/public/times.png";
 import { useState } from "react";
 import Button from "../Button";
 
-const Settings = ({ canvas, getCanvasSize, transform }) => {
+interface Props {
+  canvas: HTMLCanvasElement;
+  getCanvasSize: (x: number) => void;
+}
+
+const Settings: React.FC<Props> = ({ canvas, getCanvasSize }) => {
   const [settings, setSettings] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [currentOption, setCurrentOption] = useState(40);
   const [hillightOption, setHillightOption] = useState(40);
-  const optionPick = (x) => {
+  const optionPick = (x: number) => {
     setConfirm(true);
     setCurrentOption(x);
   };
-  const handleChange = (x) => {
+  const handleChange = (x: number) => {
     getCanvasSize(x);
     setHillightOption(currentOption);
-    canvas.current.getContext("2d").clearRect(0, 0, 1000, 800);
+    canvas?.getContext("2d")?.clearRect(0, 0, 1000, 800);
   };
 
   return (

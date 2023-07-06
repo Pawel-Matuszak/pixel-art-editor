@@ -1,8 +1,12 @@
 import brushImage from "@/public/pencil.png";
 import Button from "../Button";
 
-const Brush = ({ handleToolChange, currentTool }) => {
-  console.log(brushImage.src);
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+
+const Brush: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <Button
       handleToolChange={handleToolChange}

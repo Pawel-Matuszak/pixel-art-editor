@@ -1,7 +1,12 @@
 import zoomImage from "@/public/zoom.png";
 import Button from "../Button";
 
-const Zoom = ({ handleToolChange, currentTool }) => {
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+
+const Zoom: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <Button
       handleToolChange={handleToolChange}

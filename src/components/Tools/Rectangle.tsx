@@ -1,6 +1,11 @@
 import rectImg from "@/public/rect.png";
 
-const Rectangle = ({ handleToolChange, currentTool }) => {
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+
+const Rectangle: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <div style={{ position: "relative" }}>
       <div

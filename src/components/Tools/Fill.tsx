@@ -1,7 +1,10 @@
 import fillImage from "@/public/fillbucket.png";
 import Button from "../Button";
-
-const Fill = ({ handleToolChange, currentTool }) => {
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+const Fill: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <Button
       handleToolChange={handleToolChange}

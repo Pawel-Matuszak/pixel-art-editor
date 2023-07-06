@@ -1,21 +1,33 @@
-import React, {useState, useEffect} from 'react'
-import { ChromePicker } from 'react-color'
+import { type IColor } from "@/src/types";
+import React, { useEffect, useState } from "react";
+import { ChromePicker, type ColorChangeHandler } from "react-color";
 
-const ColorChange = ({getColor, color}) => {
+type Props = {
+  getColor: (color: IColor) => void;
+  color: IColor;
+};
 
-  const [background, setBackground] = useState(color);
+const ColorChange: React.FC<Props> = ({ getColor, color }) => {
+  const [background, setBackground] = useState(
+    `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`
+  );
 
-  const changeBgr = (color)=>{
-    setBackground(`rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`)
-  }
+  const changeBgr = (color: IColor) => {
+    setBackground(`rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`);
+  };
 
   useEffect(() => {
-    setBackground(`rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`)
-  }, [color])
+    setBackground(`rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`);
+  }, [color]);
 
   return (
-      <ChromePicker color={background} onChange={changeBgr} onChangeComplete={getColor} disableAlpha={true}/>
-  )
-}
+    <ChromePicker
+      color={background}
+      onChange={changeBgr as ColorChangeHandler}
+      onChangeComplete={getColor as ColorChangeHandler}
+      disableAlpha={true}
+    />
+  );
+};
 
-export default ColorChange
+export default ColorChange;

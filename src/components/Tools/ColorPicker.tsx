@@ -1,7 +1,12 @@
 import pickerImage from "@/public/picker.png";
 import Button from "../Button";
 
-const ColorPicker = ({ handleToolChange, currentTool }) => {
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+
+const ColorPicker: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <Button
       handleToolChange={handleToolChange}

@@ -1,22 +1,41 @@
-import React, {useState} from 'react'
-import ColorChange from './ColorChange'
+import { IColor } from "@/src/types";
+import React, { useState } from "react";
+import ColorChange from "./ColorChange";
 
-const ColorSelect = ({className, color, getColor}) => {
+interface Props {
+  className: string;
+  color: IColor;
+  getColor: (color: IColor) => void;
+}
 
-  const [colorPicker, setColorPicker] = useState(false)
-  const toggleColorPicker = () =>{
+const ColorSelect: React.FC<Props> = ({ className, color, getColor }) => {
+  const [colorPicker, setColorPicker] = useState(false);
+  const toggleColorPicker = () => {
     setColorPicker(!colorPicker);
-  }
+  };
 
   return (
     <>
-      <div className={className} style={{backgroundColor: `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`}} onClick={toggleColorPicker}></div>
-        {colorPicker && <>
-          <span className="color-picker"><ColorChange color={color} getColor={getColor}/></span>
-          <span className="color-picker-exit" onClick={()=>setColorPicker(false)}></span>
-        </>}
+      <div
+        className={className}
+        style={{
+          backgroundColor: `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b})`,
+        }}
+        onClick={toggleColorPicker}
+      ></div>
+      {colorPicker && (
+        <>
+          <span className="color-picker">
+            <ColorChange color={color} getColor={getColor} />
+          </span>
+          <span
+            className="color-picker-exit"
+            onClick={() => setColorPicker(false)}
+          ></span>
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default ColorSelect
+export default ColorSelect;

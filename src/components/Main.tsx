@@ -36,13 +36,12 @@ const Main = () => {
   const getHighlight = () => {
     setHighlight(!highlight);
   };
-
   const getCanvasClear = () => {
     setCanvasClear(!canvasClear);
   };
 
-  const getCanvasRef = (canvas: HTMLCanvasElement) => {
-    setCanvas(canvas);
+  const getCanvasRef = (canvas: React.RefObject<HTMLCanvasElement>) => {
+    setCanvas(canvas.current);
   };
 
   const getColor = (colorData: IColor) => {
@@ -57,17 +56,18 @@ const Main = () => {
     setBrushSize(value);
   };
 
-  const getCanvasSize = (x) => {
-    setTransform(Math.ceil(canvas.current.width / x));
+  const getCanvasSize = (x: number) => {
+    if (!canvas) return;
+    setTransform(Math.ceil(canvas.width / x));
   };
 
-  const swapColors = (color, secondColor) => {
+  const swapColors = (color: IColor, secondColor: IColor) => {
     const currentSecond = secondColor;
     setSecondColor(color);
     setColor(currentSecond);
   };
 
-  const handleToolChange = (tool) => {
+  const handleToolChange = (tool: number) => {
     setCurrentTool(tool);
   };
 
@@ -149,15 +149,17 @@ const Main = () => {
 
         {/* Options */}
         <div className="right-column-container">
-          <Settings canvas={canvas} getCanvasSize={getCanvasSize} />
+          {canvas && <Settings canvas={canvas} getCanvasSize={getCanvasSize} />}
           <HistoryButtons />
-          <SaveImage canvas={canvas} />
+          {canvas && <SaveImage canvas={canvas} />}
           <ToggleHighlight
             getHighlight={getHighlight}
             highlight={highlight}
             className={"highlight"}
           />
-          <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
+          {canvas && (
+            <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
+          )}
         </div>
       </div>
     </>

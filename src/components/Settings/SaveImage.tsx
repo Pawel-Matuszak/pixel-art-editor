@@ -4,11 +4,15 @@ import saveButton from "@/public/saveBtn.png";
 import saveButtonHover from "@/public/saveBtnHover.png";
 import saveIcon from "@/public/saveCH.png";
 import timesIcon from "@/public/times.png";
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
-const SaveImage = ({ canvas }) => {
-  const saveImgRef = useRef(null);
-  const errMsg = useRef(null);
+interface Props {
+  canvas: HTMLCanvasElement;
+}
+
+const SaveImage: React.FC<Props> = ({ canvas }) => {
+  const saveImgRef = useRef<HTMLAnchorElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [saveMenu, setSaveMenu] = useState(false);
   const [dropdown, setDropdown] = useState(false);
@@ -17,25 +21,28 @@ const SaveImage = ({ canvas }) => {
     format: "",
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.name.length <= 0 || formData.format.length <= 0) {
-      errMsg.current.innerHTML = "Select name and format";
+      setErrorMessage("Select name and format");
       return;
     }
     downloadImage();
-    errMsg.current.innerHTML = "";
+    setErrorMessage("");
     setSaveMenu(false);
   };
 
-  const downloadImage = async () => {
+  const downloadImage = () => {
+    console.log("downloadImage", canvas);
+    if (!saveImgRef.current || !canvas) return;
+    console.log(saveImgRef.current);
     saveImgRef.current.setAttribute(
       "download",
       `${formData.name}.${formData.format}`
     );
     saveImgRef.current.setAttribute(
       "href",
-      canvas.current.toDataURL(`image/${formData.format}`)
+      canvas.toDataURL(`image/${formData.format}`)
     );
     saveImgRef.current.click();
   };
@@ -54,7 +61,7 @@ const SaveImage = ({ canvas }) => {
           <form onSubmit={handleSubmit} className="dropdown-container">
             <div className="save-title">Save Image</div>
             <div className="exit" onClick={() => setSaveMenu(false)}>
-              <img src={timesIcon} />
+              <img src={timesIcon.src} />
             </div>
             <input
               type="text"
@@ -114,17 +121,22 @@ const SaveImage = ({ canvas }) => {
             <button type="submit">
               <img
                 src={saveButton.src}
-                onMouseEnter={(e) => {
-                  e.target.src = `${saveButtonHover}`;
+                onMouseEnter={(
+                  e: React.MouseEvent<HTMLImageElement, MouseEvent>
+                ) => {
+                  const img = e.currentTarget;
+                  img.src = `${saveButtonHover.src}`;
                 }}
-                onMouseLeave={(e) => {
-                  e.target.src = `${saveButton}`;
+                onMouseLeave={(
+                  e: React.MouseEvent<HTMLImageElement, MouseEvent>
+                ) => {
+                  e.currentTarget.src = `${saveButton.src}`;
                 }}
                 alt="save"
               />
             </button>
-            <a ref={saveImgRef}></a>
-            <div className="err-msg" ref={errMsg}></div>
+            <a ref={saveImgRef} href=""></a>
+            <div className="err-msg">{errorMessage}</div>
           </form>
         </div>
       )}

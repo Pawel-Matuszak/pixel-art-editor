@@ -1,7 +1,12 @@
 import eraserImage from "@/public/eraser.png";
 import Button from "../Button";
 
-const Eraser = ({ handleToolChange, currentTool }) => {
+interface Props {
+  handleToolChange: (toolId: number) => void;
+  currentTool: number;
+}
+
+const Eraser: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <Button
       handleToolChange={handleToolChange}

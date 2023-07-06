@@ -14,9 +14,9 @@ interface Props {
   color: IColor;
   secondaryColor: IColor;
   brushSize: number;
-  getCanvasRef: any;
+  getCanvasRef: (canvas: React.RefObject<HTMLCanvasElement>) => void;
   currentTool: number;
-  handleToolChange: any;
+  handleToolChange: (toolId: number) => void;
   zoom: boolean;
   canvasClear: boolean;
   highlight: boolean;
@@ -54,22 +54,32 @@ const Canvas: React.FC<Props> = ({
   });
   const [rectDraw, setRectDraw] = useState<boolean>(false);
 
-  const mousePosition = (e, canvas, offset, canvasParams) => {
-    let rect = canvas.getBoundingClientRect();
-    let cursorX = Math.floor(
+  const mousePosition = (
+    e: MouseEvent,
+    canvas: HTMLCanvasElement,
+    offset: IOffset,
+    canvasParams: ICanvasParams
+  ) => {
+    const rect = canvas.getBoundingClientRect();
+    const cursorX = Math.floor(
       (e.clientX - rect.left) / offset.scale / canvasParams.transform
     );
-    let cursorY = Math.floor(
+    const cursorY = Math.floor(
       (e.clientY - rect.top) / offset.scale / canvasParams.transform
     );
     return { cursorX, cursorY };
   };
 
-  const getColorInRgb = (color) => {
+  const getColorInRgb = (color: IColor) => {
     return `rgb(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`;
   };
 
-  const brushDraw = (brushSize, cursorX, cursorY, context) => {
+  const brushDraw = (
+    brushSize: number,
+    cursorX: number,
+    cursorY: number,
+    context: CanvasRenderingContext2D
+  ) => {
     switch (brushSize) {
       case 1:
         context.fillRect(cursorX, cursorY, 1, 1);
@@ -92,11 +102,12 @@ const Canvas: React.FC<Props> = ({
   //draw rect logic
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas?.getContext("2d");
     const shapesCanvas = shapesCanvasRef.current;
-    const shapesContext = shapesCanvas.getContext("2d");
+    const shapesContext = shapesCanvas?.getContext("2d");
 
-    context.drawImage(
+    if (!shapesCanvas || !shapesContext || !canvas || !context) return;
+    context?.drawImage(
       shapesCanvas,
       0,
       0,
@@ -105,7 +116,7 @@ const Canvas: React.FC<Props> = ({
     );
     shapesContext.clearRect(0, 0, canvas.width, canvas.height);
 
-    let newImage = context.getImageData(0, 0, canvas.width, canvas.height);
+    const newImage = context.getImageData(0, 0, canvas.width, canvas.height);
     setHistoryQueue({
       history: [...historyQueue.history, newImage],
       redo: [],
@@ -114,9 +125,11 @@ const Canvas: React.FC<Props> = ({
 
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas?.getContext("2d");
+    if (!canvas || !context) return;
+
     const background = new Image();
-    background.src = backgroundImage;
+    background.src = backgroundImage.src;
     background.onload = function () {
       context.drawImage(background, 0, 0);
     };
@@ -138,10 +151,11 @@ const Canvas: React.FC<Props> = ({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas?.getContext("2d");
+    if (!canvas || !context) return;
     const highlightCanvas = highlightCanvasRef.current;
     const shapesCanvas = shapesCanvasRef.current;
-    const shapesContext = shapesCanvas.getContext("2d");
+    const shapesContext = shapesCanvas?.getContext("2d");
 
     context.setTransform(
       canvasParams.transform,
@@ -149,23 +163,23 @@ const Canvas: React.FC<Props> = ({
       0,
       canvasParams.transform,
       0,
-      0,
-      origin.x,
-      origin.y
+      0
+      // origin.x,
+      // origin.y
     );
-    shapesContext.setTransform(
+    shapesContext?.setTransform(
       canvasParams.transform,
       0,
       0,
       canvasParams.transform,
       0,
-      0,
-      origin.x,
-      origin.y
+      0
+      // origin.x,
+      // origin.y
     );
     getCanvasRef(canvasRef);
 
-    const eraser = (brushSize, cursorX, cursorY) => {
+    const eraser = (brushSize: number, cursorX: number, cursorY: number) => {
       switch (brushSize) {
         case 1:
           context.clearRect(cursorX, cursorY, 1, 1);
@@ -185,7 +199,7 @@ const Canvas: React.FC<Props> = ({
       }
     };
 
-    const picker = (e, cursorX, cursorY) => {
+    const picker = (e: MouseEvent, cursorX: number, cursorY: number) => {
       const imageData = context.getImageData(
         cursorX * canvasParams.transform,
         cursorY * canvasParams.transform,
@@ -194,10 +208,10 @@ const Canvas: React.FC<Props> = ({
       );
       if (!imageData.data[3]) return;
       const colorRgb = {
-        r: imageData.data[0],
-        g: imageData.data[1],
-        b: imageData.data[2],
-        a: imageData.data[3],
+        r: imageData.data[0] || 0,
+        g: imageData.data[1] || 0,
+        b: imageData.data[2] || 0,
+        a: imageData.data[3] || 0,
       };
       if (e.button === 0) {
         color.rgb = colorRgb;
@@ -207,46 +221,46 @@ const Canvas: React.FC<Props> = ({
       handleToolChange(0);
     };
 
-    let mouseStart = 0;
-    let mouseEnd = 0;
+    let mouseStart = { cursorX: 0, cursorY: 0 };
+    let mouseEnd = { cursorX: 0, cursorY: 0 };
 
-    const drawRect = (e) => {
+    const drawRect = (e: MouseEvent) => {
       if (e.type === "mousedown") {
         mouseStart = mousePosition(e, canvas, offset, canvasParams);
-        if (e.buttons === 1) {
+        if (shapesContext && e.buttons === 1) {
           shapesContext.fillStyle = getColorInRgb(color);
-        } else if (e.buttons === 2) {
+        } else if (shapesContext && e.buttons === 2) {
           shapesContext.fillStyle = getColorInRgb(secondaryColor);
         }
         return;
       }
 
       mouseEnd = mousePosition(e, canvas, offset, canvasParams);
-      shapesContext.clearRect(0, 0, canvas.width, canvas.height);
+      shapesContext?.clearRect(0, 0, canvas.width, canvas.height);
 
-      shapesContext.fillRect(mouseStart.cursorX, mouseStart.cursorY, 1, 1);
-      shapesContext.fillRect(mouseStart.cursorX, mouseEnd.cursorY, 1, 1);
-      shapesContext.fillRect(mouseEnd.cursorX, mouseStart.cursorY, 1, 1);
-      shapesContext.fillRect(mouseEnd.cursorX, mouseEnd.cursorY, 1, 1);
-      shapesContext.fillRect(
+      shapesContext?.fillRect(mouseStart.cursorX, mouseStart.cursorY, 1, 1);
+      shapesContext?.fillRect(mouseStart.cursorX, mouseEnd.cursorY, 1, 1);
+      shapesContext?.fillRect(mouseEnd.cursorX, mouseStart.cursorY, 1, 1);
+      shapesContext?.fillRect(mouseEnd.cursorX, mouseEnd.cursorY, 1, 1);
+      shapesContext?.fillRect(
         mouseStart.cursorX,
         mouseStart.cursorY,
         1,
         mouseEnd.cursorY - mouseStart.cursorY
       );
-      shapesContext.fillRect(
+      shapesContext?.fillRect(
         mouseStart.cursorX,
         mouseStart.cursorY,
         mouseEnd.cursorX - mouseStart.cursorX,
         1
       );
-      shapesContext.fillRect(
+      shapesContext?.fillRect(
         mouseStart.cursorX,
         mouseStart.cursorY + (mouseEnd.cursorY - mouseStart.cursorY),
         mouseEnd.cursorX - mouseStart.cursorX,
         1
       );
-      shapesContext.fillRect(
+      shapesContext?.fillRect(
         mouseStart.cursorX + (mouseEnd.cursorX - mouseStart.cursorX),
         mouseStart.cursorY,
         1,
@@ -259,7 +273,7 @@ const Canvas: React.FC<Props> = ({
     };
 
     //returns current pixel color in rgba (0,0,0,0)
-    const pixelColor = (x, y) => {
+    const pixelColor = (x: number, y: number) => {
       return context
         .getImageData(
           x * canvasParams.transform,
@@ -270,8 +284,13 @@ const Canvas: React.FC<Props> = ({
         .data.join();
     };
 
-    const matchStartColor = (x, y, originPixelColor, e) => {
-      let pixel = pixelColor(x, y);
+    const matchStartColor = (
+      x: number,
+      y: number,
+      originPixelColor: string,
+      e: MouseEvent
+    ) => {
+      const pixel = pixelColor(x, y);
 
       //anty infinite loop sth idk
       color.rgb.a = 255;
@@ -292,7 +311,7 @@ const Canvas: React.FC<Props> = ({
 
       return pixel == originPixelColor ? true : false;
     };
-    const fill = (e, cursorX, cursorY) => {
+    const fill = (e: MouseEvent, cursorX: number, cursorY: number) => {
       if (e.type !== "mousedown") return;
       const originPixelColor = pixelColor(cursorX, cursorY);
 
@@ -300,9 +319,9 @@ const Canvas: React.FC<Props> = ({
 
       while (pixelStack.length) {
         const pixelPop = pixelStack.pop();
-        let x = pixelPop[0];
-        let y = pixelPop[1];
-
+        const x = pixelPop?.[0];
+        let y = pixelPop?.[1];
+        if (!x || !y) return;
         while (y >= 0 && matchStartColor(x, y, originPixelColor, e)) {
           y--;
         }
@@ -342,7 +361,7 @@ const Canvas: React.FC<Props> = ({
       }
     };
 
-    const handleTools = (e) => {
+    const handleTools = (e: MouseEvent) => {
       e.preventDefault();
 
       //Get cursor current position
@@ -373,7 +392,7 @@ const Canvas: React.FC<Props> = ({
           break;
 
         case 6:
-          drawRect(e, context, shapesContext);
+          drawRect(e);
           break;
 
         default:
@@ -381,7 +400,7 @@ const Canvas: React.FC<Props> = ({
       }
     };
 
-    const handleMouse = (e) => {
+    const handleMouse = (e: MouseEvent) => {
       if (e.buttons === 1) {
         context.fillStyle = getColorInRgb(color);
       } else if (e.buttons === 2) {
@@ -394,7 +413,7 @@ const Canvas: React.FC<Props> = ({
       }
     };
 
-    const handleMouseUp = (e) => {
+    const handleMouseUp = (e: MouseEvent) => {
       highlightCanvas?.removeEventListener("mousemove", handleTools);
       highlightCanvas?.removeEventListener("mouseup", handleMouseUp);
       handleTools(e);
@@ -455,12 +474,12 @@ const Canvas: React.FC<Props> = ({
       0,
       canvasParams.transform,
       0,
-      0,
-      origin.x,
-      origin.y
+      0
+      // origin.x,
+      // origin.y
     );
 
-    const handleHighlight = (e) => {
+    const handleHighlight = (e: MouseEvent) => {
       const { cursorX, cursorY } = mousePosition(
         e,
         canvas,
@@ -482,12 +501,12 @@ const Canvas: React.FC<Props> = ({
   useEffect(() => {
     const highlightCanvas = highlightCanvasRef.current;
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas?.getContext("2d");
 
-    const handleHistory = (e) => {
-      if (e.type !== "mouseup") return;
+    const handleHistory = (e: MouseEvent) => {
+      if (e.type !== "mouseup" || !canvas || !context) return;
       // zapisywać tylko zmiany
-      let newImage = context.getImageData(0, 0, canvas.width, canvas.height);
+      const newImage = context.getImageData(0, 0, canvas.width, canvas.height);
       setHistoryQueue({
         history: [...historyQueue.history, newImage],
         redo: [],
@@ -499,11 +518,16 @@ const Canvas: React.FC<Props> = ({
         history: historyQueue.history.slice(0, -1),
         redo: [...historyQueue.redo, ...historyQueue.history.slice(-1)],
       });
+      const canvas = canvasRef.current;
+      const context = canvas?.getContext("2d");
 
-      if (!historyQueue.history[historyQueue.history.length - 1]) {
-        canvasRef.current
-          .getContext("2d")
-          .clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      if (!historyQueue.history[historyQueue.history.length - 1] && canvas) {
+        context?.clearRect(
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
         return;
       }
     };
@@ -516,14 +540,16 @@ const Canvas: React.FC<Props> = ({
       });
     };
 
-    if (historyQueue.history[historyQueue.history.length - 1]) {
-      canvasRef.current
-        .getContext("2d")
-        .putImageData(
-          historyQueue.history[historyQueue.history.length - 1],
-          0,
-          0
-        );
+    if (
+      historyQueue.history[historyQueue.history.length - 1] &&
+      canvas &&
+      context
+    ) {
+      context.putImageData(
+        historyQueue.history[historyQueue.history.length - 1] as ImageData,
+        0,
+        0
+      );
     }
 
     const undoBtn = document.querySelector("#undo-button");
@@ -542,9 +568,10 @@ const Canvas: React.FC<Props> = ({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const context = canvas?.getContext("2d");
+    if (!context || !canvas) return;
 
-    let newImage = context.getImageData(0, 0, canvas.width, canvas.height);
+    const newImage = context?.getImageData(0, 0, canvas.width, canvas.height);
     setHistoryQueue({
       history: [...historyQueue.history, newImage],
       redo: [],
@@ -561,9 +588,8 @@ const Canvas: React.FC<Props> = ({
       centerOnInit={true}
       wheel={{ step: 0.05 }}
     >
-      {({ state }) => (
+      {({ instance }) => (
         <>
-          <>{console.log(state)}</>
           <TransformComponent>
             <canvas
               ref={highlightCanvasRef}
@@ -572,9 +598,9 @@ const Canvas: React.FC<Props> = ({
               height={canvasParams.height}
               onMouseMove={() =>
                 setOffset({
-                  x: state.positionX || 0,
-                  y: state.positionY || 0,
-                  scale: state.scale || 1,
+                  x: instance.transformState.positionX,
+                  y: instance.transformState.positionY,
+                  scale: instance.transformState.scale,
                 })
               }
               style={{ cursor: `url('${cursor}') 0 40, auto` }}
