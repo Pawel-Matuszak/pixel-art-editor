@@ -319,9 +319,10 @@ const Canvas: React.FC<Props> = ({
 
       while (pixelStack.length) {
         const pixelPop = pixelStack.pop();
-        const x = pixelPop?.[0];
-        let y = pixelPop?.[1];
-        if (!x || !y) return;
+        if (pixelPop === undefined) return;
+        const x: number = pixelPop[0] as number;
+        let y: number = pixelPop[1] as number;
+
         while (y >= 0 && matchStartColor(x, y, originPixelColor, e)) {
           y--;
         }
