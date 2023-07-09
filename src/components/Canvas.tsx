@@ -284,6 +284,15 @@ const Canvas: React.FC<Props> = ({
         .data.join();
     };
 
+    const isInBounds = (x: number, y: number) => {
+      return (
+        x >= 0 &&
+        x < canvasParams.width / canvasParams.transform &&
+        y >= 0 &&
+        y < canvasParams.height / canvasParams.transform
+      );
+    };
+
     const matchStartColor = (
       x: number,
       y: number,
@@ -292,7 +301,6 @@ const Canvas: React.FC<Props> = ({
     ) => {
       const pixel = pixelColor(x, y);
 
-      //anty infinite loop sth idk
       color.rgb.a = 255;
       secondaryColor.rgb.a = 255;
       if (e.button == 0) {
@@ -322,8 +330,11 @@ const Canvas: React.FC<Props> = ({
         if (pixelPop === undefined) return;
         const x: number = pixelPop[0] as number;
         let y: number = pixelPop[1] as number;
-
-        while (y >= 0 && matchStartColor(x, y, originPixelColor, e)) {
+        while (
+          y >= 0 &&
+          matchStartColor(x, y, originPixelColor, e) &&
+          isInBounds(x, y)
+        ) {
           y--;
         }
         ++y;
@@ -332,7 +343,8 @@ const Canvas: React.FC<Props> = ({
 
         while (
           y < canvasParams.height / canvasParams.transform &&
-          matchStartColor(x, y, originPixelColor, e)
+          matchStartColor(x, y, originPixelColor, e) &&
+          isInBounds(x, y)
         ) {
           context.fillRect(x, y, 1, 1);
 
