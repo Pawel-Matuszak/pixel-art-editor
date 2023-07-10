@@ -1,19 +1,20 @@
 import rectImg from "@/public/rect.png";
+import { useAppDispatch, useAppSelector } from "@/src/hooks";
+import { setTool } from "@/src/state/toolsSlice";
+import Image from "next/image";
 
-interface Props {
-  handleToolChange: (toolId: number) => void;
-  currentTool: number;
-}
+const Rectangle: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { selectedTool } = useAppSelector((state) => state.tools);
 
-const Rectangle: React.FC<Props> = ({ handleToolChange, currentTool }) => {
   return (
     <div style={{ position: "relative" }}>
       <div
         className={`icon drawRect`}
-        onClick={() => handleToolChange(6)}
-        style={{ background: currentTool === 6 ? "rgb(78, 78, 78)" : "" }}
+        onClick={() => dispatch(setTool(6))}
+        style={{ background: selectedTool === 6 ? "rgb(78, 78, 78)" : "" }}
       >
-        <img src={rectImg.src} width={30} height={30} />
+        <Image src={rectImg.src} alt="Rectangle tool" width={30} height={30} />
       </div>
       <span className="icon-label">Draw Rectangle</span>
     </div>

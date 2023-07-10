@@ -9,14 +9,13 @@ import brushImage from "@/public/pencil.png";
 import pickerImage from "@/public/picker.png";
 import zoomImage from "@/public/zoom.png";
 import { ICanvasParams, IColor, IHistoryQueue, IOffset } from "@/src/types";
+import { useAppSelector } from "../hooks";
 
 interface Props {
   color: IColor;
   secondaryColor: IColor;
   brushSize: number;
   getCanvasRef: (canvas: React.RefObject<HTMLCanvasElement>) => void;
-  currentTool: number;
-  handleToolChange: (toolId: number) => void;
   zoom: boolean;
   canvasClear: boolean;
   highlight: boolean;
@@ -28,13 +27,12 @@ const Canvas: React.FC<Props> = ({
   secondaryColor,
   brushSize,
   getCanvasRef,
-  currentTool,
-  handleToolChange,
   zoom,
   canvasClear,
   highlight,
   transform,
 }) => {
+  const { selectedTool } = useAppSelector((state) => state.tools);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const highlightCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -218,7 +216,6 @@ const Canvas: React.FC<Props> = ({
       } else if (e.button === 2) {
         secondaryColor.rgb = colorRgb;
       }
-      handleToolChange(0);
     };
 
     let mouseStart = { cursorX: 0, cursorY: 0 };
@@ -386,7 +383,7 @@ const Canvas: React.FC<Props> = ({
       );
 
       //use selected tool
-      switch (currentTool) {
+      switch (selectedTool) {
         case 0:
           if (e.type === "contextmenu") return;
           brushDraw(brushSize, cursorX, cursorY, context);
@@ -433,7 +430,7 @@ const Canvas: React.FC<Props> = ({
     };
 
     const changeCursor = () => {
-      switch (currentTool) {
+      switch (selectedTool) {
         case 0:
           setCursor(brushImage.src);
           break;
@@ -476,7 +473,7 @@ const Canvas: React.FC<Props> = ({
     if (!context || !canvas) return;
     if (
       !highlight ||
-      (currentTool !== 0 && currentTool !== 1 && currentTool !== 2)
+      (selectedTool !== 0 && selectedTool !== 1 && selectedTool !== 2)
     ) {
       context.clearRect(0, 0, canvas.width, canvas.height);
       return;
@@ -508,7 +505,7 @@ const Canvas: React.FC<Props> = ({
     return () => {
       canvas.removeEventListener("mousemove", handleHighlight);
     };
-  }, [zoom, highlight, currentTool, brushSize, canvasParams]);
+  }, [zoom, highlight, selectedTool, brushSize, canvasParams]);
 
   //History handler
   useEffect(() => {

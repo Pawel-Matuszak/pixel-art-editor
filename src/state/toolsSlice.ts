@@ -9,12 +9,12 @@ const toolsSlice = createSlice({
   name: "tools",
   initialState,
   reducers: {
-    setSelectTool: (state, action: PayloadAction<number>) => {
+    setTool: (state, action: PayloadAction<number>) => {
       state.selectedTool = action.payload;
     },
   },
 });
 
-export const { setSelectTool } = toolsSlice.actions;
+export const { setTool } = toolsSlice.actions;
 
 export default toolsSlice.reducer;

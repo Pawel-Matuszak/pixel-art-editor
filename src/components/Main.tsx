@@ -1,5 +1,6 @@
 import swapImage from "@/public/swap-colors.png";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../hooks";
 import { type IColor } from "../types";
 import Canvas from "./Canvas";
 import ColorSelect from "./ColorPicker/ColorSelect";
@@ -27,11 +28,11 @@ const Main = () => {
     rgb: { r: 0, g: 0, b: 0, a: 255 },
   });
   const [brushSize, setBrushSize] = useState<number>(1);
-  const [currentTool, setCurrentTool] = useState(0);
   const [zoom, setZoom] = useState(true);
   const [canvasClear, setCanvasClear] = useState(true);
   const [highlight, setHighlight] = useState(false);
   const [transform, setTransform] = useState(20);
+  const { selectedTool } = useAppSelector((state) => state.tools);
 
   const getHighlight = () => {
     setHighlight(!highlight);
@@ -67,17 +68,13 @@ const Main = () => {
     setColor(currentSecond);
   };
 
-  const handleToolChange = (tool: number) => {
-    setCurrentTool(tool);
-  };
-
   useEffect(() => {
-    if (currentTool === 5) {
+    if (selectedTool === 5) {
       setZoom(false);
     } else {
       setZoom(true);
     }
-  }, [currentTool]);
+  }, [selectedTool]);
 
   return (
     <>
@@ -85,30 +82,12 @@ const Main = () => {
         {/* Brushes and tools */}
         <div className="left-column-container">
           <div className="tools-container">
-            <Brush
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
-            <Eraser
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
-            <ColorPicker
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
-            <Fill
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
-            <Zoom
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
-            <Rectangle
-              handleToolChange={handleToolChange}
-              currentTool={currentTool}
-            />
+            <Brush />
+            <Eraser />
+            <ColorPicker />
+            <Fill />
+            <Zoom />
+            <Rectangle />
           </div>
           <SizeSlider getBrushSize={getBrushSize} />
           <div className="color-picker-container">
@@ -137,8 +116,6 @@ const Main = () => {
             color={color}
             secondaryColor={secondColor}
             brushSize={brushSize}
-            currentTool={currentTool}
-            handleToolChange={handleToolChange}
             getCanvasRef={getCanvasRef}
             zoom={zoom}
             canvasClear={canvasClear}
