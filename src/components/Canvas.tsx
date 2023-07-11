@@ -8,12 +8,15 @@ import fillImage from "@/public/fillbucket.png";
 import brushImage from "@/public/pencil.png";
 import pickerImage from "@/public/picker.png";
 import zoomImage from "@/public/zoom.png";
-import { ICanvasParams, IColor, IHistoryQueue, IOffset } from "@/src/types";
+import type {
+  ICanvasParams,
+  IColor,
+  IHistoryQueue,
+  IOffset,
+} from "@/src/types";
 import { useAppSelector } from "../hooks";
 
 interface Props {
-  color: IColor;
-  secondaryColor: IColor;
   brushSize: number;
   getCanvasRef: (canvas: React.RefObject<HTMLCanvasElement>) => void;
   zoom: boolean;
@@ -23,8 +26,6 @@ interface Props {
 }
 
 const Canvas: React.FC<Props> = ({
-  color,
-  secondaryColor,
   brushSize,
   getCanvasRef,
   zoom,
@@ -45,6 +46,7 @@ const Canvas: React.FC<Props> = ({
     originX: 0,
     originY: 0,
   });
+  const { color, secondaryColor } = useAppSelector((state) => state.tools);
   const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0, scale: 1 });
   const [historyQueue, setHistoryQueue] = useState<IHistoryQueue>({
     history: [],
@@ -298,8 +300,8 @@ const Canvas: React.FC<Props> = ({
     ) => {
       const pixel = pixelColor(x, y);
 
-      color.rgb.a = 255;
-      secondaryColor.rgb.a = 255;
+      // color.rgb.a = 255;
+      // secondaryColor.rgb.a = 255;
       if (e.button == 0) {
         if (
           pixel ===

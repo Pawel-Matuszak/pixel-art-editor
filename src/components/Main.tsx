@@ -1,9 +1,8 @@
-import swapImage from "@/public/swap-colors.png";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../hooks";
-import { type IColor } from "../types";
 import Canvas from "./Canvas";
 import ColorSelect from "./ColorPicker/ColorSelect";
+import ColorSwap from "./ColorPicker/ColorSwap";
 import ClearAll from "./Settings/ClearAll";
 import HistoryButtons from "./Settings/HistoryButtons";
 import SaveImage from "./Settings/SaveImage";
@@ -19,14 +18,6 @@ import Zoom from "./Tools/Zoom";
 
 const Main = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-  const [color, setColor] = useState<IColor>({
-    hex: "#fff",
-    rgb: { r: 255, g: 255, b: 255, a: 255 },
-  });
-  const [secondColor, setSecondColor] = useState<IColor>({
-    hex: "#000",
-    rgb: { r: 0, g: 0, b: 0, a: 255 },
-  });
   const [brushSize, setBrushSize] = useState<number>(1);
   const [zoom, setZoom] = useState(true);
   const [canvasClear, setCanvasClear] = useState(true);
@@ -45,14 +36,6 @@ const Main = () => {
     setCanvas(canvas.current);
   };
 
-  const getColor = (colorData: IColor) => {
-    setColor(colorData);
-  };
-
-  const getSecondaryColor = (colorData: IColor) => {
-    setSecondColor(colorData);
-  };
-
   const getBrushSize = (value: number) => {
     setBrushSize(value);
   };
@@ -60,12 +43,6 @@ const Main = () => {
   const getCanvasSize = (x: number) => {
     if (!canvas) return;
     setTransform(Math.ceil(canvas.width / x));
-  };
-
-  const swapColors = (color: IColor, secondColor: IColor) => {
-    const currentSecond = secondColor;
-    setSecondColor(color);
-    setColor(currentSecond);
   };
 
   useEffect(() => {
@@ -91,30 +68,15 @@ const Main = () => {
           </div>
           <SizeSlider getBrushSize={getBrushSize} />
           <div className="color-picker-container">
-            <ColorSelect
-              className={"secondary-color"}
-              color={secondColor}
-              getColor={getSecondaryColor}
-            />
-            <ColorSelect
-              className={"primary-color"}
-              color={color}
-              getColor={getColor}
-            />
-            <div
-              className="color-swap"
-              onClick={() => swapColors(color, secondColor)}
-            >
-              <img src={swapImage.src} alt="" />
-            </div>
+            <ColorSelect className="secondary-color" />
+            <ColorSelect className="primary-color" />
+            <ColorSwap />
           </div>
         </div>
 
         {/* Canvas */}
         <div className="canvas-container">
           <Canvas
-            color={color}
-            secondaryColor={secondColor}
             brushSize={brushSize}
             getCanvasRef={getCanvasRef}
             zoom={zoom}
@@ -132,7 +94,7 @@ const Main = () => {
           <ToggleHighlight
             getHighlight={getHighlight}
             highlight={highlight}
-            className={"highlight"}
+            className="highlight"
           />
           {canvas && (
             <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
