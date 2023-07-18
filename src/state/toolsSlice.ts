@@ -4,6 +4,9 @@ import { IToolsSlice } from "../types/toolsSliceInterface";
 
 const initialState: IToolsSlice = {
   selectedTool: 0,
+  brushSize: 1,
+  zoom: false,
+  highlight: false,
   color: {
     hex: "#fff",
     rgb: { r: 255, g: 255, b: 255, a: 255 },
@@ -18,6 +21,15 @@ const toolsSlice = createSlice({
   name: "tools",
   initialState,
   reducers: {
+    setZoom: (state, action: PayloadAction<boolean>) => {
+      state.zoom = action.payload;
+    },
+    setHighlight: (state, action: PayloadAction<boolean>) => {
+      state.highlight = action.payload;
+    },
+    setBrushSize: (state, action: PayloadAction<number>) => {
+      state.brushSize = action.payload;
+    },
     setTool: (state, action: PayloadAction<number>) => {
       state.selectedTool = action.payload;
     },
@@ -30,7 +42,13 @@ const toolsSlice = createSlice({
   },
 });
 
-export const { setTool, setPrimaryColor, setSecondaryColor } =
-  toolsSlice.actions;
+export const {
+  setZoom,
+  setBrushSize,
+  setHighlight,
+  setTool,
+  setPrimaryColor,
+  setSecondaryColor,
+} = toolsSlice.actions;
 
 export default toolsSlice.reducer;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { setZoom } from "../state/toolsSlice";
 import Canvas from "./Canvas";
 import ColorSelect from "./ColorPicker/ColorSelect";
 import ColorSwap from "./ColorPicker/ColorSwap";
@@ -18,26 +19,17 @@ import Zoom from "./Tools/Zoom";
 
 const Main = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-  const [brushSize, setBrushSize] = useState<number>(1);
-  const [zoom, setZoom] = useState(true);
   const [canvasClear, setCanvasClear] = useState(true);
-  const [highlight, setHighlight] = useState(false);
   const [transform, setTransform] = useState(20);
   const { selectedTool } = useAppSelector((state) => state.tools);
+  const dispatch = useAppDispatch();
 
-  const getHighlight = () => {
-    setHighlight(!highlight);
-  };
   const getCanvasClear = () => {
     setCanvasClear(!canvasClear);
   };
 
   const getCanvasRef = (canvas: React.RefObject<HTMLCanvasElement>) => {
     setCanvas(canvas.current);
-  };
-
-  const getBrushSize = (value: number) => {
-    setBrushSize(value);
   };
 
   const getCanvasSize = (x: number) => {
@@ -47,11 +39,11 @@ const Main = () => {
 
   useEffect(() => {
     if (selectedTool === 5) {
-      setZoom(false);
+      dispatch(setZoom(false));
     } else {
-      setZoom(true);
+      dispatch(setZoom(true));
     }
-  }, [selectedTool]);
+  }, [selectedTool, dispatch]);
 
   return (
     <>
@@ -66,7 +58,7 @@ const Main = () => {
             <Zoom />
             <Rectangle />
           </div>
-          <SizeSlider getBrushSize={getBrushSize} />
+          <SizeSlider />
           <div className="color-picker-container">
             <ColorSelect className="secondary-color" />
             <ColorSelect className="primary-color" />
@@ -77,29 +69,22 @@ const Main = () => {
         {/* Canvas */}
         <div className="canvas-container">
           <Canvas
-            brushSize={brushSize}
             getCanvasRef={getCanvasRef}
-            zoom={zoom}
             canvasClear={canvasClear}
-            highlight={highlight}
             transform={transform}
           />
         </div>
 
         {/* Options */}
-        <div className="right-column-container">
-          {canvas && <Settings canvas={canvas} getCanvasSize={getCanvasSize} />}
-          <HistoryButtons />
-          {canvas && <SaveImage canvas={canvas} />}
-          <ToggleHighlight
-            getHighlight={getHighlight}
-            highlight={highlight}
-            className="highlight"
-          />
-          {canvas && (
+        {canvas && (
+          <div className="right-column-container">
+            <Settings canvas={canvas} getCanvasSize={getCanvasSize} />
+            <HistoryButtons />
+            <SaveImage canvas={canvas} />
+            <ToggleHighlight className="highlight" />
             <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );

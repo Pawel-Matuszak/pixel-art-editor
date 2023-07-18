@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/src/hooks";
+import { setBrushSize } from "@/src/state/toolsSlice";
+import React from "react";
 
-interface Props {
-  getBrushSize: (value: number) => void;
-}
-
-const SizeSlider: React.FC<Props> = ({ getBrushSize }) => {
-  const [brushSize, setBrushSize] = useState(1);
+const SizeSlider: React.FC = () => {
+  const { brushSize } = useAppSelector((state) => state.tools);
+  const dispatch = useAppDispatch();
 
   const handleBrushSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    setBrushSize(parseInt(e.target.value));
+    dispatch(setBrushSize(parseInt(e.target.value)));
   };
-
-  useEffect(() => {
-    getBrushSize(brushSize);
-  }, [brushSize]);
 
   return (
     <div className="brush-size-container">

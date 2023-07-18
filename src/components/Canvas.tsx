@@ -17,23 +17,17 @@ import type {
 import { useAppSelector } from "../hooks";
 
 interface Props {
-  brushSize: number;
   getCanvasRef: (canvas: React.RefObject<HTMLCanvasElement>) => void;
-  zoom: boolean;
   canvasClear: boolean;
-  highlight: boolean;
   transform: number;
 }
 
-const Canvas: React.FC<Props> = ({
-  brushSize,
-  getCanvasRef,
-  zoom,
-  canvasClear,
-  highlight,
-  transform,
-}) => {
-  const { selectedTool } = useAppSelector((state) => state.tools);
+const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
+  const { selectedTool, zoom, highlight, brushSize } = useAppSelector(
+    (state) => state.tools
+  );
+  const { color, secondaryColor } = useAppSelector((state) => state.tools);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const highlightCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,7 +40,6 @@ const Canvas: React.FC<Props> = ({
     originX: 0,
     originY: 0,
   });
-  const { color, secondaryColor } = useAppSelector((state) => state.tools);
   const [offset, setOffset] = useState<IOffset>({ x: 0, y: 0, scale: 1 });
   const [historyQueue, setHistoryQueue] = useState<IHistoryQueue>({
     history: [],

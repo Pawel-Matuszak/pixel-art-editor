@@ -1,22 +1,21 @@
 import highlightOnIcon from "@/public/bulb.png";
 import highlightOffIcon from "@/public/bulbOff.png";
+import { useAppDispatch, useAppSelector } from "@/src/hooks";
+import { setHighlight } from "@/src/state/toolsSlice";
 
 interface Props {
-  getHighlight: () => void;
-  highlight: boolean;
   className: string;
 }
 
-const ToggleHighlight: React.FC<Props> = ({
-  getHighlight,
-  highlight,
-  className,
-}) => {
+const ToggleHighlight: React.FC<Props> = ({ className }) => {
+  const { highlight } = useAppSelector((state) => state.tools);
+  const dispatch = useAppDispatch();
+
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       <div
         className={`icon ${className}`}
-        onClick={getHighlight}
+        onClick={() => dispatch(setHighlight(!highlight))}
         style={{ background: highlight ? "rgb(78, 78, 78)" : "" }}
       >
         {highlight ? (
