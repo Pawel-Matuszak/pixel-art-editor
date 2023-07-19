@@ -33,9 +33,7 @@ const SaveImage: React.FC<Props> = ({ canvas }) => {
   };
 
   const downloadImage = () => {
-    console.log("downloadImage", canvas);
     if (!saveImgRef.current || !canvas) return;
-    console.log(saveImgRef.current);
     saveImgRef.current.setAttribute(
       "download",
       `${formData.name}.${formData.format}`
@@ -75,9 +73,13 @@ const SaveImage: React.FC<Props> = ({ canvas }) => {
               className="dropdown-header"
               onClick={() => setDropdown(!dropdown)}
             >
-              <div className="dropdown-header-title">
-                {formData.format || "Select format"}
-              </div>
+              <input
+                className={`dropdown-header-title border-none bg-transparent ${
+                  formData.format ? "placeholder-white" : ""
+                } outline-none`}
+                readOnly
+                placeholder={formData.format || "Select format"}
+              />
               <div className="caret">
                 <img
                   style={{

@@ -258,7 +258,6 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
         1,
         mouseEnd.cursorY - mouseStart.cursorY + 1
       );
-      console.log(e.type);
       if (e.type === "mouseup") {
         setRectDraw(!rectDraw);
       }
