@@ -1,24 +1,27 @@
 import settingsIcon from "@/public/cog.png";
 import timesIcon from "@/public/times.png";
+import { useAppDispatch } from "@/src/hooks";
+import { setCanvasTransform } from "@/src/state/toolsSlice";
 import { useState } from "react";
 import Button from "../Button";
 
 interface Props {
   canvas: HTMLCanvasElement;
-  getCanvasSize: (x: number) => void;
 }
 
-const Settings: React.FC<Props> = ({ canvas, getCanvasSize }) => {
+const Settings: React.FC<Props> = ({ canvas }) => {
   const [settings, setSettings] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [currentOption, setCurrentOption] = useState(40);
   const [hillightOption, setHillightOption] = useState(40);
+  const dispatch = useAppDispatch();
+
   const optionPick = (x: number) => {
     setConfirm(true);
     setCurrentOption(x);
   };
   const handleChange = (x: number) => {
-    getCanvasSize(x);
+    dispatch(setCanvasTransform(Math.ceil(canvas.width / x)));
     setHillightOption(currentOption);
     canvas?.getContext("2d")?.clearRect(0, 0, 1000, 800);
   };
@@ -27,8 +30,8 @@ const Settings: React.FC<Props> = ({ canvas, getCanvasSize }) => {
     //select canvas size
     <div className="settings">
       <Button
-        handleToolChange={setSettings}
-        toolId={!settings}
+        isSelected={settings}
+        onClick={() => setSettings(!settings)}
         iconSrc={settingsIcon.src}
         label={"Settings"}
         className={"settings"}

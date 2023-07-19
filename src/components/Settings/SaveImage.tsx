@@ -50,8 +50,8 @@ const SaveImage: React.FC<Props> = ({ canvas }) => {
   return (
     <>
       <Button
-        handleToolChange={setSaveMenu}
-        toolId={!saveMenu}
+        onClick={() => setSaveMenu(!saveMenu)}
+        isSelected={saveMenu}
         iconSrc={saveIcon.src}
         label={"Save"}
         className={"save"}

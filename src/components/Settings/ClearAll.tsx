@@ -13,9 +13,9 @@ const ClearAll: React.FC<Props> = ({ canvas, getCanvasClear }) => {
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
-      <div className="icon clear-all" onClick={() => handleClearAll(canvas)}>
+      <button className="icon clear-all" onClick={() => handleClearAll(canvas)}>
         <img src={clearAllIcon.src} />
-      </div>
+      </button>
       <span className="icon-label">ClearAll</span>
     </div>
   );

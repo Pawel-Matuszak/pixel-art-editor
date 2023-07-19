@@ -1,23 +1,24 @@
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { setTool } from "../state/toolsSlice";
-
 type Props = {
-  toolId: number;
+  isSelected: boolean;
+  onClick: () => void;
   label: string;
   iconSrc?: string;
   className: string;
 };
 
-const Button: React.FC<Props> = ({ toolId, label, iconSrc, className }) => {
-  const dispatch = useAppDispatch();
-  const { selectedTool } = useAppSelector((state) => state.tools);
-
+const Button: React.FC<Props> = ({
+  isSelected,
+  onClick,
+  label,
+  iconSrc,
+  className,
+}) => {
   return (
     <div style={{ position: "relative" }}>
       <div
         className={`icon ${className}`}
-        onClick={() => dispatch(setTool(toolId))}
-        style={{ background: selectedTool === toolId ? "rgb(78, 78, 78)" : "" }}
+        onClick={onClick}
+        style={{ background: isSelected ? "rgb(78, 78, 78)" : "" }}
       >
         {iconSrc ? <img src={iconSrc} /> : label}
       </div>

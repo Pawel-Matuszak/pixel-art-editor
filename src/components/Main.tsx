@@ -20,7 +20,7 @@ import Zoom from "./Tools/Zoom";
 const Main = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [canvasClear, setCanvasClear] = useState(true);
-  const [transform, setTransform] = useState(20);
+  const { transform } = useAppSelector((state) => state.tools.canvas);
   const { selectedTool } = useAppSelector((state) => state.tools);
   const dispatch = useAppDispatch();
 
@@ -32,10 +32,10 @@ const Main = () => {
     setCanvas(canvas.current);
   };
 
-  const getCanvasSize = (x: number) => {
-    if (!canvas) return;
-    setTransform(Math.ceil(canvas.width / x));
-  };
+  // const getCanvasSize = (x: number) => {
+  //   if (!canvas) return;
+  //   setTransform();
+  // };
 
   useEffect(() => {
     if (selectedTool === 5) {
@@ -78,10 +78,10 @@ const Main = () => {
         {/* Options */}
         {canvas && (
           <div className="right-column-container">
-            <Settings canvas={canvas} getCanvasSize={getCanvasSize} />
+            <Settings canvas={canvas} />
             <HistoryButtons />
             <SaveImage canvas={canvas} />
-            <ToggleHighlight className="highlight" />
+            <ToggleHighlight />
             <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
           </div>
         )}

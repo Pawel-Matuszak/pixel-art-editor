@@ -7,4 +7,7 @@ export interface IToolsSlice {
   highlight: boolean;
   color: IColor;
   secondaryColor: IColor;
+  canvas: {
+    transform: number;
+  };
 }
