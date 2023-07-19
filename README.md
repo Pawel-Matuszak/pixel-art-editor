@@ -6,7 +6,7 @@
 Web Application for drawing images in a pixel art style.  
 My goal for this project was to get a better understanding of react function components and hooks.  
 
-Website: https://pawel-matuszak.github.io/pixel-art-editor/
+Website: https://pixel-art-editor-xi.vercel.app/
 
 ## Features
 * __Brush__ - drawing tool. Size can be changed from 1px to 4px
