@@ -26,6 +26,15 @@ const Settings: React.FC<Props> = ({ canvas }) => {
     canvas?.getContext("2d")?.clearRect(0, 0, 1000, 800);
   };
 
+  const canvasSizes = [
+    { width: 90, height: 72 },
+    { width: 80, height: 64 },
+    { width: 60, height: 48 },
+    { width: 50, height: 40 },
+    { width: 40, height: 32 },
+    { width: 20, height: 16 },
+  ];
+
   return (
     //select canvas size
     <div className="settings">
@@ -44,66 +53,17 @@ const Settings: React.FC<Props> = ({ canvas }) => {
               <img src={timesIcon.src} />
             </div>
             <div className="options-size">
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 90 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(90)}
-              >
-                90x72
-              </div>
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 80 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(80)}
-              >
-                80x64
-              </div>
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 60 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(60)}
-              >
-                60x48
-              </div>
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 50 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(50)}
-              >
-                50x40
-              </div>
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 40 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(40)}
-              >
-                40x32
-              </div>
-              <div
-                className="option-item"
-                style={{
-                  backgroundColor:
-                    hillightOption === 20 ? "rgb(146, 136, 136)" : "",
-                }}
-                onClick={() => optionPick(20)}
-              >
-                20x16
-              </div>
+              {canvasSizes.map((size, index) => (
+                <div
+                  className={`option-item bg-slate-400 text-slate-100 hover:bg-slate-500 ${
+                    hillightOption == size.width ? "bg-slate-500" : ""
+                  }`}
+                  key={index}
+                  onClick={() => optionPick(size.width)}
+                >
+                  {size.width}x{size.height}
+                </div>
+              ))}
             </div>
             {confirm && (
               <div className="confirm-container">

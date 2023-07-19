@@ -13,12 +13,18 @@ const SizeSlider: React.FC = () => {
   return (
     <div className="brush-size-container">
       <div className="slider">
-        <div className="slider-label">
-          Size: <input type="text" value={`${brushSize}px`} readOnly></input>
+        <div className="slider-label ">
+          Size:{" "}
+          <input
+            className="bg-gray-400"
+            type="text"
+            value={`${brushSize}px`}
+            readOnly
+          ></input>
         </div>
         <input
           type="range"
-          className="slider-input"
+          className="slider-input bg-gray-400"
           min="1"
           max="4"
           step="1"

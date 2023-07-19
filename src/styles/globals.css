@@ -260,7 +260,6 @@ img {
 .slider-input {
   -webkit-appearance: none;
   appearance: none;
-  background: #d1ccc6;
   box-sizing: content-box;
   border: 2px solid #28211a;
   height: 20px;
@@ -453,7 +452,6 @@ img {
 .option-item {
   width: 130px;
   height: 100px;
-  background: rgb(119, 110, 110);
   box-shadow: #202020 1px 1px 1px 2px;
   margin: 15px;
   display: flex;
@@ -464,9 +462,6 @@ img {
   transition: background 0.05s ease-in;
 }
 
-.option-item:hover {
-  background: rgb(146, 136, 136);
-}
 .confirm-container {
   position: absolute;
   top: 50%;
