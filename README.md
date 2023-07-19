@@ -1,5 +1,5 @@
 
-#  ![App logo](/src/res/logo.png) Pixel fill - react app
+#  ![App logo](/public/logo.png) Pixel fill - react app
 
 
 ## Description
