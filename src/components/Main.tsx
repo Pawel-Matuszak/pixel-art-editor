@@ -32,11 +32,6 @@ const Main = () => {
     setCanvas(canvas.current);
   };
 
-  // const getCanvasSize = (x: number) => {
-  //   if (!canvas) return;
-  //   setTransform();
-  // };
-
   useEffect(() => {
     if (selectedTool === 5) {
       dispatch(setZoom(false));

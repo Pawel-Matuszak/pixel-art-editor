@@ -98,7 +98,6 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
     const context = canvas?.getContext("2d");
     const shapesCanvas = shapesCanvasRef.current;
     const shapesContext = shapesCanvas?.getContext("2d");
-
     if (!shapesCanvas || !shapesContext || !canvas || !context) return;
     context?.drawImage(
       shapesCanvas,
@@ -217,6 +216,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
     let mouseEnd = { cursorX: 0, cursorY: 0 };
 
     const drawRect = (e: MouseEvent) => {
+      if (e.type === "contextmenu") return;
       if (e.type === "mousedown") {
         mouseStart = mousePosition(e, canvas, offset, canvasParams);
         if (shapesContext && e.buttons === 1) {
@@ -258,7 +258,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
         1,
         mouseEnd.cursorY - mouseStart.cursorY + 1
       );
-
+      console.log(e.type);
       if (e.type === "mouseup") {
         setRectDraw(!rectDraw);
       }
