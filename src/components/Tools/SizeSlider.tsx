@@ -16,7 +16,7 @@ const SizeSlider: React.FC = () => {
         <div className="slider-label ">
           Size:{" "}
           <input
-            className="bg-gray-400"
+            className="rounded-sm bg-gray-500 font-bold "
             type="text"
             value={`${brushSize}px`}
             readOnly
@@ -24,7 +24,7 @@ const SizeSlider: React.FC = () => {
         </div>
         <input
           type="range"
-          className="slider-input bg-gray-400"
+          className="slider-input rounded-sm bg-gray-400"
           min="1"
           max="4"
           step="1"

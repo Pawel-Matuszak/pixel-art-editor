@@ -1,7 +1,7 @@
 import settingsIcon from "@/public/cog.png";
 import timesIcon from "@/public/times.png";
 import { useAppDispatch } from "@/src/hooks";
-import { setCanvasTransform } from "@/src/state/toolsSlice";
+import { setCanvasTransform, setTransformFactor } from "@/src/state/toolsSlice";
 import { useState } from "react";
 import Button from "../Button";
 
@@ -13,7 +13,7 @@ const Settings: React.FC<Props> = ({ canvas }) => {
   const [settings, setSettings] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [currentOption, setCurrentOption] = useState(40);
-  const [hillightOption, setHillightOption] = useState(40);
+  const [highlightedOption, setHighlightedOption] = useState(40);
   const dispatch = useAppDispatch();
 
   const optionPick = (x: number) => {
@@ -21,9 +21,10 @@ const Settings: React.FC<Props> = ({ canvas }) => {
     setCurrentOption(x);
   };
   const handleChange = (x: number) => {
+    dispatch(setTransformFactor(x));
     dispatch(setCanvasTransform(Math.ceil(canvas.width / x)));
-    setHillightOption(currentOption);
-    canvas?.getContext("2d")?.clearRect(0, 0, 1000, 800);
+    setHighlightedOption(currentOption);
+    canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
   };
 
   const canvasSizes = [
@@ -56,7 +57,7 @@ const Settings: React.FC<Props> = ({ canvas }) => {
               {canvasSizes.map((size, index) => (
                 <div
                   className={`option-item bg-slate-400 text-slate-100 hover:bg-slate-500 ${
-                    hillightOption == size.width ? "bg-slate-500" : ""
+                    highlightedOption == size.width ? "bg-slate-500" : ""
                   }`}
                   key={index}
                   onClick={() => optionPick(size.width)}

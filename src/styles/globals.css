@@ -36,14 +36,6 @@ img {
   color: #f0f;
 }
 
-.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .color-picker-container {
   position: relative;
   height: 120px;
@@ -84,11 +76,7 @@ img {
 }
 
 .color-picker {
-  position: absolute;
-  top: 0;
-  left: 100%;
   border: 2px solid #88482f;
-  z-index: 999;
 }
 
 .color-picker-exit {
@@ -101,12 +89,6 @@ img {
 }
 
 .canvas-container {
-  position: relative;
-  width: 1200px;
-  height: 800px;
-  overflow: hidden;
-  margin: 0 20px;
-  border: 5px solid transparent;
   border-image: url("../../public/border.png") 24;
   background: rgba(0, 0, 0, 0.6);
 }
@@ -116,8 +98,8 @@ img {
 }
 
 .react-transform-wrapper {
-  width: 1200px;
-  height: 800px;
+  /* width: 1200px;
+  height: 800px; */
 }
 
 .canvas {
@@ -141,21 +123,6 @@ img {
 }
 
 /* left */
-
-.left-column-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* background: rgb(56, 56, 56); */
-  padding: 5rem 0.5rem;
-  width: 160px;
-}
-
-.tools-container {
-  width: min-content;
-  display: flex;
-  flex-direction: column;
-}
 
 .brush-size-container {
   position: relative;

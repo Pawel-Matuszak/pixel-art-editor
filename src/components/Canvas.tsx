@@ -14,19 +14,19 @@ import type {
   IHistoryQueue,
   IOffset,
 } from "@/src/types";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { setCanvasTransform } from "../state/toolsSlice";
 
 interface Props {
   getCanvasRef: (canvas: React.RefObject<HTMLCanvasElement>) => void;
   canvasClear: boolean;
-  transform: number;
 }
 
-const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
-  const { selectedTool, zoom, highlight, brushSize } = useAppSelector(
-    (state) => state.tools
-  );
-  const { color, secondaryColor } = useAppSelector((state) => state.tools);
+const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear }) => {
+  const { selectedTool, zoom, highlight, brushSize, color, secondaryColor } =
+    useAppSelector((state) => state.tools);
+  const { transform, factor } = useAppSelector((state) => state.tools.canvas);
+  const dispatch = useAppDispatch();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -116,20 +116,29 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
   }, [rectDraw]);
 
   useEffect(() => {
-    const canvas = backgroundCanvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
+    dispatch(setCanvasTransform(Math.ceil((canvasParams.width || 0) / factor)));
+  }, [factor, canvasParams]);
+
+  useEffect(() => {
+    const canvasBackground = backgroundCanvasRef.current;
+    const contextBackground = canvasBackground?.getContext("2d");
+    if (!canvasBackground || !contextBackground) return;
 
     const background = new Image();
     background.src = backgroundImage.src;
     background.onload = function () {
-      context.drawImage(background, 0, 0);
+      contextBackground.drawImage(background, 0, 0);
     };
 
     return () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      contextBackground.clearRect(
+        0,
+        0,
+        canvasBackground.width,
+        canvasBackground.height
+      );
     };
-  }, []);
+  }, [canvasParams.width]);
 
   useEffect(() => {
     setCanvasParams({
@@ -549,6 +558,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
       canvas &&
       context
     ) {
+      console.log(canvasParams.width, canvasParams.height);
       context.putImageData(
         historyQueue.history[historyQueue.history.length - 1] as ImageData,
         0,
@@ -584,7 +594,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
 
   return (
     <TransformWrapper
-      initialScale={0.9}
+      initialScale={0.95}
       minScale={0.2}
       maxScale={4}
       disabled={zoom}
@@ -593,7 +603,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
       wheel={{ step: 0.05 }}
     >
       {({ instance }) => (
-        <>
+        <div className="w-min">
           <TransformComponent>
             <canvas
               ref={highlightCanvasRef}
@@ -630,7 +640,7 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear, transform }) => {
               height={canvasParams.height}
             ></canvas>
           </TransformComponent>
-        </>
+        </div>
       )}
     </TransformWrapper>
   );

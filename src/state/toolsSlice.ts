@@ -16,7 +16,8 @@ const initialState: IToolsSlice = {
     rgb: { r: 0, g: 0, b: 0, a: 255 },
   },
   canvas: {
-    transform: 20,
+    transform: 0,
+    factor: 40,
   },
 };
 
@@ -45,6 +46,9 @@ const toolsSlice = createSlice({
     setCanvasTransform: (state, action: PayloadAction<number>) => {
       state.canvas.transform = action.payload;
     },
+    setTransformFactor: (state, action: PayloadAction<number>) => {
+      state.canvas.factor = action.payload;
+    },
   },
 });
 
@@ -56,6 +60,7 @@ export const {
   setPrimaryColor,
   setSecondaryColor,
   setCanvasTransform,
+  setTransformFactor,
 } = toolsSlice.actions;
 
 export default toolsSlice.reducer;

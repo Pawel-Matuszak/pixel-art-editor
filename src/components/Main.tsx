@@ -20,7 +20,6 @@ import Zoom from "./Tools/Zoom";
 const Main = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [canvasClear, setCanvasClear] = useState(true);
-  const { transform } = useAppSelector((state) => state.tools.canvas);
   const { selectedTool } = useAppSelector((state) => state.tools);
   const dispatch = useAppDispatch();
 
@@ -42,10 +41,10 @@ const Main = () => {
 
   return (
     <>
-      <div className="container">
+      <div className="flex h-screen w-screen items-center justify-center max-xl:flex-col">
         {/* Brushes and tools */}
-        <div className="left-column-container">
-          <div className="tools-container">
+        <div className="m-2 flex w-32 flex-col items-center max-xl:hidden">
+          <div className="flex flex-col">
             <Brush />
             <Eraser />
             <ColorPicker />
@@ -62,17 +61,13 @@ const Main = () => {
         </div>
 
         {/* Canvas */}
-        <div className="canvas-container">
-          <Canvas
-            getCanvasRef={getCanvasRef}
-            canvasClear={canvasClear}
-            transform={transform}
-          />
+        <div className="canvas-container relative mx-0 my-5  overflow-hidden border-4 ">
+          <Canvas getCanvasRef={getCanvasRef} canvasClear={canvasClear} />
         </div>
 
         {/* Options */}
         {canvas && (
-          <div className="right-column-container">
+          <div className=" m-2 flex w-32 flex-col items-center max-xl:hidden">
             <Settings canvas={canvas} />
             <HistoryButtons />
             <SaveImage canvas={canvas} />
@@ -80,6 +75,39 @@ const Main = () => {
             <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
           </div>
         )}
+
+        {/* Mobile Brushes and tools */}
+        <div className="flex w-3/4 flex-row flex-wrap justify-center  rounded-t-md  border-2 border-b-0 border-slate-950 bg-sky-800 max-sm:w-11/12 xl:hidden">
+          <div className="flex  flex-col items-center justify-center px-2">
+            <div className="flex">
+              <Brush />
+              <Eraser />
+              <ColorPicker />
+              <Fill />
+              <Zoom />
+              <Rectangle />
+            </div>
+            {canvas && (
+              <div className="flex">
+                <Settings canvas={canvas} />
+                <HistoryButtons />
+                <SaveImage canvas={canvas} />
+                <ToggleHighlight />
+                <ClearAll canvas={canvas} getCanvasClear={getCanvasClear} />
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-center px-2">
+            <div className="w-min">
+              <SizeSlider />
+            </div>
+            <div className="color-picker-container">
+              <ColorSelect className="secondary-color" />
+              <ColorSelect className="primary-color" />
+              <ColorSwap />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

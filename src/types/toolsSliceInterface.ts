@@ -9,5 +9,6 @@ export interface IToolsSlice {
   secondaryColor: IColor;
   canvas: {
     transform: number;
+    factor: number;
   };
 }
