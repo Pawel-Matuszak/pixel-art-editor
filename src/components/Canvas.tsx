@@ -15,6 +15,7 @@ import type {
   IOffset,
 } from "@/src/types";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { useWindowWidth } from "../hooks/useWindowWidth";
 import { setCanvasTransform } from "../state/toolsSlice";
 
 interface Props {
@@ -591,6 +592,36 @@ const Canvas: React.FC<Props> = ({ getCanvasRef, canvasClear }) => {
       redo: [],
     });
   }, [canvasClear]);
+  const windowWidth = useWindowWidth();
+  const MOBILE_BREAKPOINT = 600;
+  const TABLET_BREAKPOINT = 1280;
+  useEffect(() => {
+    setCanvasParams({
+      width: 1000,
+      height: 800,
+      transform: transform,
+      originX: 0,
+      originY: 0,
+    });
+    if (windowWidth < TABLET_BREAKPOINT) {
+      setCanvasParams({
+        width: 600,
+        height: 480,
+        transform: transform,
+        originX: 0,
+        originY: 0,
+      });
+    }
+    if (windowWidth < MOBILE_BREAKPOINT) {
+      setCanvasParams({
+        width: 500,
+        height: 400,
+        transform: transform,
+        originX: 0,
+        originY: 0,
+      });
+    }
+  }, [windowWidth]);
 
   return (
     <TransformWrapper

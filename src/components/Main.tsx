@@ -41,7 +41,7 @@ const Main = () => {
 
   return (
     <>
-      <div className="flex h-screen w-screen items-center justify-center max-xl:flex-col">
+      <div className="flex h-screen w-screen items-center justify-center  max-xl:flex-col">
         {/* Brushes and tools */}
         <div className="m-2 flex w-32 flex-col items-center max-xl:hidden">
           <div className="flex flex-col">
@@ -61,7 +61,7 @@ const Main = () => {
         </div>
 
         {/* Canvas */}
-        <div className="canvas-container relative mx-0 my-5  overflow-hidden border-4 ">
+        <div className="canvas-container relative mx-0 my-5 overflow-hidden border-4 max-xl:mb-36 max-xl:flex ">
           <Canvas getCanvasRef={getCanvasRef} canvasClear={canvasClear} />
         </div>
 
@@ -77,8 +77,8 @@ const Main = () => {
         )}
 
         {/* Mobile Brushes and tools */}
-        <div className="flex w-3/4 flex-row flex-wrap justify-center  rounded-t-md  border-2 border-b-0 border-slate-950 bg-sky-800 max-sm:w-11/12 xl:hidden">
-          <div className="flex  flex-col items-center justify-center px-2">
+        <div className="absolute bottom-0 flex w-3/4 flex-row flex-wrap justify-center justify-self-end  rounded-t-md  border-2 border-b-0 border-slate-950 bg-sky-800 max-sm:w-11/12 xl:hidden">
+          <div className="flex flex-col items-center justify-center px-2">
             <div className="flex">
               <Brush />
               <Eraser />
