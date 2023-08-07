@@ -37,7 +37,7 @@ const ColorSelect: React.FC<Props> = ({ className }) => {
             <ColorChange className={className} />
           </span>
           <span
-            className="color-picker-exit"
+            className="color-picker-exit z-30"
             onClick={() => setColorPicker(false)}
           ></span>
         </>
